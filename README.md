@@ -24,6 +24,10 @@ image-generation models for marketing applications.
 ---
 ## Project Status
 
- **Phase 1 — Commercial Image Generation Benchmark**
- 
- Create 25 marketing prompts across 5 categories (5 prompts each), then run the same prompts on the 3 commercial models to generate 75 images at 1024×1024.
+ ### Phase 1 Commercial Image Generation Benchmark Status
+
+- 25 benchmark prompts: Complete
+- OpenAI benchmark: Complete (25 images)
+- FLUX.2 Pro benchmark: Complete (25 images)
+- Google Gemini benchmark: Pending API access / owner-side execution
+- Benchmark CSV: Complete
