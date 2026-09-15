@@ -2,59 +2,151 @@
   {
     "prompt_id": "PL-01",
     "category": "people_lifestyle",
-    "difficulty": "easy",
+    "difficulty": "Easy",
     "prompt": "A candid lifestyle photograph of a professional woman in her late 20s sitting in a modern minimalist cafe, casually holding a smartphone while drinking coffee. She is wearing a smart-casual outfit. Natural morning sunlight enters through large windows, with green plants and a softly blurred cafe interior in the background. Warm color palette, realistic photography, professional social media marketing campaign style."
   },
   {
     "prompt_id": "PL-02",
     "category": "people_lifestyle",
-    "difficulty": "easy",
+    "difficulty": "Easy",
     "prompt": "A candid lifestyle photograph of a diverse group of young adult friends enjoying a relaxed afternoon picnic in a sunny public park. They are sitting together on the grass, talking and laughing naturally, with coffee cups, tote bags, and picnic items nearby. Green trees and warm afternoon sunlight fill the background. Natural skin tones, warm colors, authentic lifestyle marketing photography style."
   },
   {
     "prompt_id": "PL-03",
     "category": "people_lifestyle",
-    "difficulty": "medium",
+    "difficulty": "Medium",
     "prompt": "A candid lifestyle photograph of an elderly East Asian ceramic artisan carefully hand-painting intricate blue and teal floral patterns onto a ceramic vase inside a pottery workshop. She is wearing glasses and a work apron, with subtle paint marks on her hands. Ceramic bowls and pottery pieces appear softly blurred in the foreground. Warm natural light highlights her focused expression and craftsmanship. Shallow depth of field, rich warm colors, highly detailed, authentic cultural lifestyle campaign photography style."
   },
   {
     "prompt_id": "PL-04",
     "category": "people_lifestyle",
-    "difficulty": "hard",
+    "difficulty": "Hard",
     "prompt": "A candid, nostalgic lifestyle photograph of a diverse group of young adult friends hanging out, talking, and laughing together in a cozy retro living room inspired by classic 1970s sitcom aesthetics. They are wearing recognizable 1970s-inspired fashion, including flare jeans, patterned knit sweaters, and earth-toned jackets. The room is decorated with a plush velvet sofa, warm patterned wallpaper, a low wooden coffee table with vintage-style soda cans and mugs, and warm ambient indoor lighting. Retro 35mm film aesthetic, soft cinematic film grain, rich tones of orange, brown, and mustard yellow, shallow depth of field, highly detailed, authentic social media lifestyle marketing campaign photography style."
   },
   {
     "prompt_id": "PL-05",
     "category": "people_lifestyle",
-    "difficulty": "medium",
+    "difficulty": "Medium",
     "prompt": "A candid lifestyle photograph of two AI infrastructure engineers collaborating in a bright modern technology office. A female engineer is sketching an AI system architecture diagram on a transparent glass board while her colleague stands beside her holding a laptop and pointing toward the diagram. Natural sunlight illuminates the workspace, with office greenery and softly blurred server racks in the background. Realistic professional B2B technology marketing photography, natural skin tones, highly detailed."
   },
-
-
-
- {
-  "prompt_id": "PO-01",
-  "category": "products_objects",
-  "prompt": "A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style"
-},
-{
-  "prompt_id": "PO-02",
-  "category": "products_objects",
-  "prompt": "A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light"
-},
-{
-  "prompt_id": "PO-03",
-  "category": "products_objects",
-  "prompt": "A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting"
-},
-{
-  "prompt_id": "PO-04",
-  "category": "products_objects",
-  "prompt": "A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting"
-},
-{
-  "prompt_id": "PO-05",
-  "category": "products_objects",
-  "prompt": "A perfume bottle with its box slightly open beside it, floating layout on a bright blue gradient background"
-}
+  {
+    "prompt_id": "TT-01",
+    "category": "text_typography",
+    "difficulty": "Medium",
+    "prompt": "Create a premium minimalist fashion poster.\n\nUse a subtle fashion-inspired background only. The background should support the design without competing with the text.\n\nInclude exactly:\n\nNEW SEASON\n\nAUTUMN / WINTER 2026\n\nModern Form. Timeless Style.\n\nDISCOVER NOW\n\nUse elegant editorial typography with strong hierarchy and generous spacing.\n\nText and typography must be the main focus.\n\nDo not let background elements overlap or obstruct the text.\n\nDo not add any other text."
+  },
+  {
+    "prompt_id": "TT-02",
+    "category": "text_typography",
+    "difficulty": "Hard",
+    "prompt": "Create a premium advertisement for a fictional running shoe brand.\n\nUse a subtle running-shoe or sports-inspired visual as a background element only.\n\nInclude exactly:\n\nVELOCITY\n\nV1 PERFORMANCE\n\nBuilt for Speed.\n\nWeight: 245 g\nDrop: 8 mm\n\n699 SAR\n\nSHOP NOW\n\nUse bold modern sports typography with clear hierarchy.\n\nText and typography must be the main focus.\n\nKeep background imagery secondary and unobtrusive.\n\nDo not add any other text."
+  },
+  {
+    "prompt_id": "TT-03",
+    "category": "text_typography",
+    "difficulty": "Hard",
+    "prompt": "Create a clean modern technology dashboard.\n\nUse subtle abstract technology graphics in the background only.\n\nInclude exactly:\n\nSYSTEM STATUS\n\nGPU-A100-04\n\nUsage: 87%\nLatency: 42.8 ms\nUptime: 99.99%\nVersion: v2.4.1\n\nONLINE\n\nUse clean technical typography with consistent spacing and alignment.\n\nText and typography must be the main focus.\n\nKeep every character and value exactly as written.\n\nDo not let background graphics interfere with readability.\n\nDo not add any other text."
+  },
+  {
+    "prompt_id": "TT-04",
+    "category": "text_typography",
+    "difficulty": "Hard",
+    "prompt": "Create a modern technology conference poster.\n\nUse subtle AI or technology imagery in the background only.\n\nInclude exactly:\n\nAI SUMMIT 2026\n\nBuild. Scale. Operate.\n\n22 October 2026\n\n09:00 — Cloud\n11:00 — AI Infrastructure\n14:00 — Data\n16:00 — Closing\n\nREGISTER NOW\n\nUse clear typography hierarchy and consistent alignment.\n\nText and typography must be the main focus.\n\nBackground imagery should remain secondary and must not overlap the text.\n\nDo not add any other text."
+  },
+  {
+    "prompt_id": "TT-05",
+    "category": "text_typography",
+    "difficulty": "Hard",
+    "prompt": "Create a premium professional tennis match poster.\n\nUse a subtle tennis court or tennis-inspired visual in the background only.\n\nInclude exactly:\n\nCHAMPIONSHIP FINAL\n\nALEX\n\nVS\n\nDANIEL\n\nSunday, 18 October 2026\n\n7:30 PM\n\nCENTRE COURT\n\nUse bold sports typography with clear hierarchy.\n\nText and typography must be the main focus.\n\nKeep the background visually secondary and do not let it obstruct the text.\n\nDo not add any other text."
+  },
+  {
+    "prompt_id": "BA-01",
+    "category": "branding_advertising",
+    "difficulty": "Easy",
+    "prompt": "Create a product advertisement for a fictional skincare brand called \"LUMI\". Show a single glass serum bottle centered on a baby blue background, with soft shadows and a clean minimal look."
+  },
+  {
+    "prompt_id": "BA-02",
+    "category": "branding_advertising",
+    "difficulty": "Medium",
+    "prompt": "Create a social media advertisement for a fictional sportswear brand called \"VORA\". Show a white sneaker on a dark pedestal with orange accents, dramatic side lighting, and negative space on the left for advertising copy."
+  },
+  {
+    "prompt_id": "BA-03",
+    "category": "branding_advertising",
+    "difficulty": "Medium",
+    "prompt": "Create a promotional advertisement for a fictional coffee brand called \"NOVA\". Show a takeaway coffee cup beside scattered coffee beans on a warm beige surface. Use soft morning lighting, a modern premium style, and include the brand name \"NOVA\" clearly on the cup."
+  },
+  {
+    "prompt_id": "BA-04",
+    "category": "branding_advertising",
+    "difficulty": "Hard",
+    "prompt": "Create a luxury advertising campaign for a fictional skincare brand called \"AURA\". Place one transparent serum bottle in the center on a white stone pedestal, with two smaller cosmetic jars positioned behind it, one on each side. Add white flowers and subtle water reflections around the products. Use soft golden lighting and a beige-and-white color palette. Include the headline \"Reveal Your Glow\" at the top and the brand name \"AURA\" at the bottom. Do not include any additional text."
+  },
+  {
+    "prompt_id": "BA-05",
+    "category": "branding_advertising",
+    "difficulty": "Hard",
+    "prompt": "Create a bold social media campaign for a fictional energy drink brand called \"PULSE\". Show three beverage cans arranged at different heights on metallic platforms: a black can in the center, an orange can on the left, and a silver can on the right. Add splashing water and orange light streaks in the background. Include the headline \"POWER YOUR MOMENT\" at the top and the brand name \"PULSE\" clearly on all three cans. Leave clean negative space in the lower-right corner for additional campaign content."
+  },
+  {
+    "prompt_id": "PO-01",
+    "category": "products_objects",
+    "difficulty": "Easy",
+    "prompt": "A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style."
+  },
+  {
+    "prompt_id": "PO-02",
+    "category": "products_objects",
+    "difficulty": "Easy",
+    "prompt": "A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light."
+  },
+  {
+    "prompt_id": "PO-03",
+    "category": "products_objects",
+    "difficulty": "Medium",
+    "prompt": "A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting."
+  },
+  {
+    "prompt_id": "PO-04",
+    "category": "products_objects",
+    "difficulty": "Medium",
+    "prompt": "A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting."
+  },
+  {
+    "prompt_id": "PO-05",
+    "category": "products_objects",
+    "difficulty": "Medium",
+    "prompt": "A perfume bottle with its box slightly open beside it, floating layout on a bright blue gradient background."
+  },
+  {
+    "prompt_id": "CC-01",
+    "category": "complex_compositions",
+    "difficulty": "Medium",
+    "prompt": "Create a lifestyle advertising image for a fictional travel brand. Show a young woman sitting at an outdoor café table with an open laptop in front of her, a coffee cup on the right side of the laptop, and a small travel bag beside the chair. In the background, show a busy European street with bicycles and pedestrians. Use warm morning sunlight and a natural, premium travel-campaign style."
+  },
+  {
+    "prompt_id": "CC-02",
+    "category": "complex_compositions",
+    "difficulty": "Hard",
+    "prompt": "Create a premium summer campaign image for a fictional beverage brand called \"SOLAR\". Show three friends having a picnic on a beach at sunset. Place a red cooler on the left, a striped picnic blanket in the center, and three beverage cans on the blanket: one yellow, one orange, and one blue. Add a surfboard standing upright in the sand on the right and a beach umbrella behind the group. The ocean should be visible in the background with soft golden sunlight reflecting on the water. Keep the composition balanced and suitable for a professional social media advertisement."
+  },
+  {
+    "prompt_id": "CC-03",
+    "category": "complex_compositions",
+    "difficulty": "Medium",
+    "prompt": "complex futuristic urban lifestyle shot of a sleek modern electric car parked on a wet asphalt city street at night. Bright magenta and cyan neon store signs reflect vividly in the rain puddles on the ground and on the car's metallic surface. Blurred pedestrians with umbrellas walking in the background under soft atmospheric street fog. Intricate reflections, high dynamic range (HDR), dramatic contrast, neon lighting aesthetic, shot on a 35mm lens, f/1.8, cinematic composition, ultra-realistic, highly detailed social media marketing ad style."
+  },
+  {
+    "prompt_id": "CC-04",
+    "category": "complex_compositions",
+    "difficulty": "Hard",
+    "prompt": "Create a premium food delivery campaign image showing a wooden dining table set for two in a modern apartment. Place a pizza in the center of the table, two glasses of sparkling water on the right, a bowl of salad on the left, and a smartphone displaying a food delivery app beside the pizza. Show one person reaching for a slice of pizza while another person holds the smartphone. In the background, include a softly lit kitchen with indoor plants and warm pendant lights. Use natural evening lighting, realistic food textures, and a polished lifestyle advertising style."
+  },
+  {
+    "prompt_id": "CC-05",
+    "category": "complex_compositions",
+    "difficulty": "Hard",
+    "prompt": "Create a high-end smart home advertising image set in a modern living room during the evening. Show a family of three relaxing on a sofa, with a large television mounted on the wall in front of them. Place a smart speaker on a side table to the left, a smartphone displaying a home-control interface on the coffee table, and two smart lamps glowing with warm light on opposite sides of the room. Through the large window in the background, show a nighttime city skyline. Keep all devices clearly visible while maintaining a natural, realistic scene with balanced composition, premium lighting, and a professional technology campaign aesthetic."
+  }
 ]
