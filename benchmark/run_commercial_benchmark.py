@@ -19,13 +19,20 @@ from openai import OpenAI
 from PIL import Image
 
 # Paths
-PROJECT_ROOT = Path(__file__).resolve().parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+
+if SCRIPT_DIR.name == "benchmark":
+    BENCHMARK_DIR = SCRIPT_DIR
+    PROJECT_ROOT = SCRIPT_DIR.parent
+else:
+    PROJECT_ROOT = SCRIPT_DIR
+    BENCHMARK_DIR = PROJECT_ROOT / "benchmark"
+
 load_dotenv(PROJECT_ROOT / ".env")
 
-PROMPTS_FILE = PROJECT_ROOT / "benchmark" / "prompts" / "benchmark_prompts.json"
-RESULTS_DIR = PROJECT_ROOT / "benchmark" / "results"
+PROMPTS_FILE = BENCHMARK_DIR / "prompts" / "benchmark_prompts.json"
+RESULTS_DIR = BENCHMARK_DIR / "results"
 IMAGES_DIR = RESULTS_DIR / "images"
-CSV_FILE = RESULTS_DIR / "benchmark_results.csv"
 
 # OpenAI
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -192,6 +199,8 @@ def make_output_path(run_id, prompt_id, provider):
 
 CSV_FIELDS = [
     "run_id",
+    "run_type",
+    "included_in_final_benchmark",
     "prompt_id",
     "prompt",
     "category",
@@ -214,10 +223,10 @@ CSV_FIELDS = [
 ]
 
 
-def append_csv(row):
-    exists = CSV_FILE.exists()
+def append_csv(row, csv_file):
+    exists = csv_file.exists()
 
-    with open(CSV_FILE, "a", newline="", encoding="utf-8") as file:
+    with open(csv_file, "a", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=CSV_FIELDS)
 
         if not exists:
@@ -436,6 +445,13 @@ def provider_key_present(provider):
 def run_benchmark(providers, prompt_ids=None, max_retries=0, require_25=False):
     ensure_directories()
 
+    run_type = "official" if require_25 else "smoke_test"
+    csv_file = RESULTS_DIR / (
+        "benchmark_results.csv"
+        if require_25
+        else "smoke_test_results.csv"
+    )
+
     prompts = load_prompts()
     validate_prompts(prompts)
 
@@ -457,7 +473,8 @@ def run_benchmark(providers, prompt_ids=None, max_retries=0, require_25=False):
     print(f"\nRun ID: {run_id}")
     print(f"Prompts: {len(prompts)}")
     print(f"Providers: {providers}")
-    print(f"CSV: {repo_relative_path(CSV_FILE)}\n")
+    print(f"Run type: {run_type}")
+    print(f"CSV: {repo_relative_path(csv_file)}\n")
 
     repo_url = detect_github_repo_url()
     if repo_url:
@@ -517,6 +534,8 @@ def run_benchmark(providers, prompt_ids=None, max_retries=0, require_25=False):
 
                 row = {
                     "run_id": run_id,
+                    "run_type": run_type,
+                    "included_in_final_benchmark": require_25,
                     "prompt_id": prompt_item["prompt_id"],
                     "prompt": prompt_item["prompt"],
                     "category": prompt_item["category"],
@@ -546,7 +565,7 @@ def run_benchmark(providers, prompt_ids=None, max_retries=0, require_25=False):
                     "attempt_number": attempt,
                 }
 
-                append_csv(row)
+                append_csv(row, csv_file)
 
                 if success:
                     print(
@@ -615,4 +634,3 @@ if __name__ == "__main__":
             max_retries=args.max_retries,
             require_25=False,
         )
-
