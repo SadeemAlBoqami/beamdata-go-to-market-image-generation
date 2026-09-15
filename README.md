@@ -15,14 +15,14 @@ image-generation models for marketing applications.
 ## Candidate Models
 
 ### Commercial
-- OpenAI gpt-image-2
+- OpenAI gpt-image-2        
 - FLUX.2 Pro
 - Gemini 3.1 Flash Image
-
 ### Open Source
 - FLUX.2 Klein 4B
 - Stable Diffusion 3.5 Medium
-
+---
 ## Project Status
 
-Phase 1 — Benchmark design and commercial model evaluation
+ **Phase 1 — Commercial Image Generation Benchmark**
+ Create 25 marketing prompts across 5 categories (5 prompts each), then run the same prompts on the 3 commercial models to generate 75 images at 1024×1024.
