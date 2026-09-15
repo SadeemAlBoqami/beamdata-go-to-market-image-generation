@@ -261,7 +261,7 @@ def generate_openai(prompt_item, run_id):
     return {
         "generation_time_seconds": round(elapsed, 3),
         "image_path": output_path,
-        "provider_request_id": getattr(result, "id", "") or "",
+        "provider_request_id": getattr(result, "_request_id", "") or "",
         "estimated_cost_usd": OPENAI_COST_PER_IMAGE,
         "width": width,
         "height": height,
