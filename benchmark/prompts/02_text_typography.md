@@ -3,6 +3,7 @@
 ---
 
 ## P-01 — Fashion Poster
+**Difficulty:** Medium
 
 Create a premium minimalist fashion poster.
 
@@ -29,6 +30,7 @@ Do not add any other text.
 ---
 
 ## P-02 — Running Shoe Advertisement
+**Difficulty:** Hard
 
 Create a premium advertisement for a fictional running shoe brand.
 
@@ -60,6 +62,7 @@ Do not add any other text.
 ---
 
 ## P-03 — Technology Dashboard
+**Difficulty:** Hard
 
 Create a clean modern technology dashboard.
 
@@ -91,6 +94,7 @@ Do not add any other text.
 ---
 
 ## P-04 — Technology Conference Poster
+**Difficulty:** Hard
 
 Create a modern technology conference poster.
 
@@ -122,6 +126,7 @@ Do not add any other text.
 ---
 
 ## P-05 — Tennis Match Poster
+**Difficulty:** Hard
 
 Create a premium professional tennis match poster.
 
