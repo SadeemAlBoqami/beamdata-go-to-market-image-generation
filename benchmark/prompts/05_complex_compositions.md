@@ -7,7 +7,8 @@
 > Create a premium summer campaign image for a fictional beverage brand called "SOLAR". Show three friends having a picnic on a beach at sunset. Place a red cooler on the left, a striped picnic blanket in the center, and three beverage cans on the blanket: one yellow, one orange, and one blue. Add a surfboard standing upright in the sand on the right and a beach umbrella behind the group. The ocean should be visible in the background with soft golden sunlight reflecting on the water. Keep the composition balanced and suitable for a professional social media advertisement.
 
 ## CC-03
-> prompt here
+> complex futuristic urban lifestyle shot of a sleek modern electric car parked on a wet asphalt city street at night. Bright magenta and cyan neon store signs reflect vividly in the rain puddles on the ground and on the car's metallic surface. Blurred pedestrians with umbrellas walking in the background under soft atmospheric street fog. Intricate reflections, high dynamic range (HDR), dramatic contrast, neon lighting aesthetic, shot on a 35mm lens, f/1.8, cinematic composition, ultra-realistic, highly detailed social media marketing ad style.
+
 
 
 ## CC-04
