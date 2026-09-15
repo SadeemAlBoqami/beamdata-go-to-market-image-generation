@@ -12,8 +12,9 @@
 
 
 ## CC-04
-> prompt here
+> Create a premium food delivery campaign image showing a wooden dining table set for two in a modern apartment. Place a pizza in the center of the table, two glasses of sparkling water on the right, a bowl of salad on the left, and a smartphone displaying a food delivery app beside the pizza. Show one person reaching for a slice of pizza while another person holds the smartphone. In the background, include a softly lit kitchen with indoor plants and warm pendant lights. Use natural evening lighting, realistic food textures, and a polished lifestyle advertising style.
+
 
 
 ## CC-05
-> prompt here
+> Create a high-end smart home advertising image set in a modern living room during the evening. Show a family of three relaxing on a sofa, with a large television mounted on the wall in front of them. Place a smart speaker on a side table to the left, a smartphone displaying a home-control interface on the coffee table, and two smart lamps glowing with warm light on opposite sides of the room. Through the large window in the background, show a nighttime city skyline. Keep all devices clearly visible while maintaining a natural, realistic scene with balanced composition, premium lighting, and a professional technology campaign aesthetic.
