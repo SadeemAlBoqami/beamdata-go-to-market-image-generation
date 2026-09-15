@@ -28,5 +28,33 @@
     "category": "people_lifestyle",
     "difficulty": "medium",
     "prompt": "A candid lifestyle photograph of two AI infrastructure engineers collaborating in a bright modern technology office. A female engineer is sketching an AI system architecture diagram on a transparent glass board while her colleague stands beside her holding a laptop and pointing toward the diagram. Natural sunlight illuminates the workspace, with office greenery and softly blurred server racks in the background. Realistic professional B2B technology marketing photography, natural skin tones, highly detailed."
-  }
+  },
+
+
+
+ {
+  "prompt_id": "PO-01",
+  "category": "products_objects",
+  "prompt": "A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style"
+},
+{
+  "prompt_id": "PO-02",
+  "category": "products_objects",
+  "prompt": "A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light"
+},
+{
+  "prompt_id": "PO-03",
+  "category": "products_objects",
+  "prompt": "A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting"
+},
+{
+  "prompt_id": "PO-04",
+  "category": "products_objects",
+  "prompt": "A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting"
+},
+{
+  "prompt_id": "PO-05",
+  "category": "products_objects",
+  "prompt": "A perfume bottle with its box slightly open beside it, floating layout on a bright blue gradient background"
+}
 ]
