@@ -1,42 +1,104 @@
-import pandas as pd
+import csv
 
 INPUT = "../benchmark/results/benchmark_results.csv"
+EVALUATION_OUTPUT = "evaluation_input.csv"
+MAPPING_OUTPUT = "image_mapping.csv"
 
-df = pd.read_csv(INPUT)
+rows = []
 
-# only tue images
-df = df[df["success"] == True].copy()
+with open(INPUT, "r", encoding="utf-8-sig") as f:
+    reader = csv.DictReader(f)
 
-# re-arrange
-df = df.sort_values(["prompt_id", "provider"]).reset_index(drop=True)
+    for row in reader:
+        success = str(row.get("success", "")).strip().lower()
 
-# IDs without model name
-df["image_id"] = [
-    f"IMG{i:03d}" for i in range(1, len(df) + 1)
-]
+        if success in {"true", "1", "yes"}:
+            rows.append(row)
 
-# mapping file
-mapping = df[
-    ["image_id", "prompt_id", "provider", "model", "image_url"]
-].copy()
+# Fixed order
+rows.sort(key=lambda r: (
+    r.get("prompt_id", ""),
+    r.get("provider", "")
+))
 
-mapping.to_csv("image_mapping.csv", index=False)
+mapping_rows = []
+evaluation_rows = []
 
-# evaluation file
-evaluation = df[
-    ["image_id", "prompt_id", "prompt", "image_url"]
-].copy()
+for i, row in enumerate(rows, start=1):
+    image_id = f"IMG{i:03d}"
 
-evaluation["quality"] = ""
-evaluation["prompt_adherence"] = ""
-evaluation["composition"] = ""
-evaluation["marketing_usefulness"] = ""
-evaluation["visual_appeal"] = ""
-evaluation["text_accuracy"] = ""
-evaluation["people_anatomy"] = ""
-evaluation["object_accuracy"] = ""
-evaluation["notes"] = ""
+    prompt_id = row.get("prompt_id", "")
+    prompt = row.get("prompt", "")
+    provider = row.get("provider", "")
+    model = row.get("model", "")
 
-evaluation.to_csv("evaluation_input.csv", index=False)
+    # Supports `image_url` or an image reference if the name is different
+    image_ref = (
+        row.get("image_url")
+        or row.get("image_reference")
+        or row.get("image_path")
+        or ""
+    )
 
-print(f"Created evaluation sheet for {len(evaluation)} images.")
+    mapping_rows.append({
+        "image_id": image_id,
+        "prompt_id": prompt_id,
+        "provider": provider,
+        "model": model,
+        "image_url": image_ref,
+    })
+
+    evaluation_rows.append({
+        "image_id": image_id,
+        "prompt_id": prompt_id,
+        "prompt": prompt,
+        "image_url": image_ref,
+        "quality": "",
+        "prompt_adherence": "",
+        "composition": "",
+        "marketing_usefulness": "",
+        "visual_appeal": "",
+        "text_accuracy": "",
+        "people_anatomy": "",
+        "object_accuracy": "",
+        "notes": "",
+    })
+
+with open(MAPPING_OUTPUT, "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(
+        f,
+        fieldnames=[
+            "image_id",
+            "prompt_id",
+            "provider",
+            "model",
+            "image_url",
+        ]
+    )
+    writer.writeheader()
+    writer.writerows(mapping_rows)
+
+with open(EVALUATION_OUTPUT, "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(
+        f,
+        fieldnames=[
+            "image_id",
+            "prompt_id",
+            "prompt",
+            "image_url",
+            "quality",
+            "prompt_adherence",
+            "composition",
+            "marketing_usefulness",
+            "visual_appeal",
+            "text_accuracy",
+            "people_anatomy",
+            "object_accuracy",
+            "notes",
+        ]
+    )
+    writer.writeheader()
+    writer.writerows(evaluation_rows)
+
+print(f"Created {EVALUATION_OUTPUT} with {len(evaluation_rows)} images.")
+print(f"Created {MAPPING_OUTPUT}.")
