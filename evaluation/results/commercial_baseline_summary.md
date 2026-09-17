@@ -55,6 +55,21 @@ Scores are reported separately by criterion rather than being collapsed into one
 
 | Model | Category | Avg Time (s) | Avg Cost/Image | Success Rate |
 |---|---|---:|---:|---:|
+| flux-2-pro | branding_advertising | 14.21 | $0.0315 | 100.00% |
+| flux-2-pro | complex_compositions | 17.84 | $0.0315 | 100.00% |
+| flux-2-pro | people_lifestyle | 15.15 | $0.0315 | 100.00% |
+| flux-2-pro | products_objects | 13.42 | $0.0315 | 100.00% |
+| flux-2-pro | text_typography | 15.79 | $0.0315 | 100.00% |
+| gemini-3.1-flash-image | branding_advertising | 9.08 | $0.0670 | 100.00% |
+| gemini-3.1-flash-image | complex_compositions | 9.24 | $0.0670 | 100.00% |
+| gemini-3.1-flash-image | people_lifestyle | 9.12 | $0.0670 | 100.00% |
+| gemini-3.1-flash-image | products_objects | 8.87 | $0.0670 | 100.00% |
+| gemini-3.1-flash-image | text_typography | 8.24 | $0.0670 | 100.00% |
+| gpt-image-2 | branding_advertising | 43.10 | $0.0500 | 100.00% |
+| gpt-image-2 | complex_compositions | 50.26 | $0.0500 | 100.00% |
+| gpt-image-2 | people_lifestyle | 48.21 | $0.0500 | 100.00% |
+| gpt-image-2 | products_objects | 40.42 | $0.0500 | 100.00% |
+| gpt-image-2 | text_typography | 42.18 | $0.0500 | 100.00% |
 
 ## 6. Human Rubric Scores by Category
 
