@@ -1,0 +1,4 @@
+model,attempts,successes,failures,success_rate_percent,avg_generation_time_seconds,median_generation_time_seconds,min_generation_time_seconds,max_generation_time_seconds,avg_cost_usd,total_cost_usd,cost_records
+flux-2-pro,25,25,0,100.0,15.28,14.4,10.8,24.41,0.0315,0.7864,25
+gemini-3.1-flash-image,25,25,0,100.0,8.91,9.06,7.56,9.77,0.067,1.675,25
+gpt-image-2,25,25,0,100.0,44.83,45.68,34.83,54.09,0.05,1.25,25
