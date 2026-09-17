@@ -1,13 +1,15 @@
 import csv
 
 FILES = {
-    "rubric_model": "rubric_summary_by_model.csv",
-    "rubric_category": "rubric_summary_by_category.csv",
-    "preference_summary": "preference_summary.csv",
-    "preference_category": "preference_by_category.csv",
-    "objective_summary": "commercial_objective_summary.csv",
-    "objective_category": "commercial_objective_by_category.csv",
+    "rubric_model": "results/rubric_summary_by_model.csv",
+    "rubric_category": "results/rubric_summary_by_category.csv",
+    "preference_summary": "results/preference_summary.csv",
+    "preference_category": "results/preference_by_category.csv",
+    "objective_summary": "results/commercial_objective_summary.csv",
+    "objective_category": "results/commercial_objective_by_category.csv",
 }
+
+OUTPUT = "results/commercial_baseline_summary.md"
 
 OUTPUT = "commercial_baseline_summary.md"
 

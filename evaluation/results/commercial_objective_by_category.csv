@@ -1,1 +1,16 @@
-python analyze_commercial_objective.py
+model,category,attempts,successes,failures,success_rate_percent,avg_generation_time_seconds,median_generation_time_seconds,min_generation_time_seconds,max_generation_time_seconds,avg_cost_usd,total_cost_usd,cost_records
+flux-2-pro,branding_advertising,5,5,0,100.0,14.21,14.09,11.78,16.72,0.0315,0.1573,5
+flux-2-pro,complex_compositions,5,5,0,100.0,17.84,16.74,14.37,24.41,0.0315,0.1573,5
+flux-2-pro,people_lifestyle,5,5,0,100.0,15.15,14.96,11.84,17.52,0.0315,0.1573,5
+flux-2-pro,products_objects,5,5,0,100.0,13.42,14.15,10.8,14.26,0.0315,0.1573,5
+flux-2-pro,text_typography,5,5,0,100.0,15.79,16.54,14.08,17.09,0.0315,0.1573,5
+gemini-3.1-flash-image,branding_advertising,5,5,0,100.0,9.08,9.1,8.38,9.77,0.067,0.335,5
+gemini-3.1-flash-image,complex_compositions,5,5,0,100.0,9.24,9.12,8.7,9.7,0.067,0.335,5
+gemini-3.1-flash-image,people_lifestyle,5,5,0,100.0,9.12,9.1,8.61,9.43,0.067,0.335,5
+gemini-3.1-flash-image,products_objects,5,5,0,100.0,8.87,8.76,8.51,9.33,0.067,0.335,5
+gemini-3.1-flash-image,text_typography,5,5,0,100.0,8.24,8.14,7.56,8.94,0.067,0.335,5
+gpt-image-2,branding_advertising,5,5,0,100.0,43.1,45.0,36.41,47.62,0.05,0.25,5
+gpt-image-2,complex_compositions,5,5,0,100.0,50.26,49.22,47.9,54.09,0.05,0.25,5
+gpt-image-2,people_lifestyle,5,5,0,100.0,48.21,48.04,45.42,53.54,0.05,0.25,5
+gpt-image-2,products_objects,5,5,0,100.0,40.42,40.4,34.83,45.68,0.05,0.25,5
+gpt-image-2,text_typography,5,5,0,100.0,42.18,42.62,37.83,46.0,0.05,0.25,5
