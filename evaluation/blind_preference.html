@@ -1,0 +1,1208 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+
+<title>Blind Image Evaluation</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px;
+}
+
+section {
+    margin-bottom: 70px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 50px;
+}
+
+.prompt {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.images {
+    display: flex;
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.card {
+    flex: 1;
+    text-align: center;
+}
+
+img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+}
+
+select {
+    font-size: 16px;
+    padding: 8px;
+    margin-left: 10px;
+}
+
+#evaluator {
+    font-size: 16px;
+    padding: 8px;
+}
+
+button {
+    font-size: 18px;
+    padding: 12px 20px;
+    margin: 30px 0;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Blind Commercial Image Evaluation</h1>
+
+<p>
+Read the prompt and select which image is best for marketing. If you think two or more images are equally good, select "Tie".
+</p>
+
+<label>
+Evaluator:
+<input id="evaluator" placeholder="Person1">
+</label>
+
+
+    <section>
+        <h2>BA-01</h2>
+
+        <p class="prompt">
+            Create a product advertisement for a fictional skincare brand called &quot;LUMI&quot;. Show a single glass serum bottle centered on a baby blue background, with soft shadows and a clean minimal look.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_BA-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_BA-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_BA-01.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="BA-01">
+            <option value="">-- Choose --</option>
+            <option value="IMG003">A</option><option value="IMG002">B</option><option value="IMG001">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>BA-02</h2>
+
+        <p class="prompt">
+            Create a social media advertisement for a fictional sportswear brand called &quot;VORA&quot;. Show a white sneaker on a dark pedestal with orange accents, dramatic side lighting, and negative space on the left for advertising copy.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_BA-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_BA-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_BA-02.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="BA-02">
+            <option value="">-- Choose --</option>
+            <option value="IMG005">A</option><option value="IMG004">B</option><option value="IMG006">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>BA-03</h2>
+
+        <p class="prompt">
+            Create a promotional advertisement for a fictional coffee brand called &quot;NOVA&quot;. Show a takeaway coffee cup beside scattered coffee beans on a warm beige surface. Use soft morning lighting, a modern premium style, and include the brand name &quot;NOVA&quot; clearly on the cup.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_BA-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_BA-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_BA-03.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="BA-03">
+            <option value="">-- Choose --</option>
+            <option value="IMG009">A</option><option value="IMG008">B</option><option value="IMG007">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>BA-04</h2>
+
+        <p class="prompt">
+            Create a luxury advertising campaign for a fictional skincare brand called &quot;AURA&quot;. Place one transparent serum bottle in the center on a white stone pedestal, with two smaller cosmetic jars positioned behind it, one on each side. Add white flowers and subtle water reflections around the products. Use soft golden lighting and a beige-and-white color palette. Include the headline &quot;Reveal Your Glow&quot; at the top and the brand name &quot;AURA&quot; at the bottom. Do not include any additional text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_BA-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_BA-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_BA-04.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="BA-04">
+            <option value="">-- Choose --</option>
+            <option value="IMG010">A</option><option value="IMG011">B</option><option value="IMG012">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>BA-05</h2>
+
+        <p class="prompt">
+            Create a bold social media campaign for a fictional energy drink brand called &quot;PULSE&quot;. Show three beverage cans arranged at different heights on metallic platforms: a black can in the center, an orange can on the left, and a silver can on the right. Add splashing water and orange light streaks in the background. Include the headline &quot;POWER YOUR MOMENT&quot; at the top and the brand name &quot;PULSE&quot; clearly on all three cans. Leave clean negative space in the lower-right corner for additional campaign content.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_BA-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_BA-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_BA-05.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="BA-05">
+            <option value="">-- Choose --</option>
+            <option value="IMG013">A</option><option value="IMG014">B</option><option value="IMG015">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>CC-01</h2>
+
+        <p class="prompt">
+            Create a lifestyle advertising image for a fictional travel brand. Show a young woman sitting at an outdoor café table with an open laptop in front of her, a coffee cup on the right side of the laptop, and a small travel bag beside the chair. In the background, show a busy European street with bicycles and pedestrians. Use warm morning sunlight and a natural, premium travel-campaign style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_CC-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_CC-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_CC-01.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="CC-01">
+            <option value="">-- Choose --</option>
+            <option value="IMG012">A</option><option value="IMG071">B</option><option value="IMG011">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>CC-02</h2>
+
+        <p class="prompt">
+            Create a premium summer campaign image for a fictional beverage brand called &quot;SOLAR&quot;. Show three friends having a picnic on a beach at sunset. Place a red cooler on the left, a striped picnic blanket in the center, and three beverage cans on the blanket: one yellow, one orange, and one blue. Add a surfboard standing upright in the sand on the right and a beach umbrella behind the group. The ocean should be visible in the background with soft golden sunlight reflecting on the water. Keep the composition balanced and suitable for a professional social media advertisement.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_CC-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_CC-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_CC-02.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="CC-02">
+            <option value="">-- Choose --</option>
+            <option value="IMG014">A</option><option value="IMG013">B</option><option value="IMG072">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>CC-03</h2>
+
+        <p class="prompt">
+            complex futuristic urban lifestyle shot of a sleek modern electric car parked on a wet asphalt city street at night. Bright magenta and cyan neon store signs reflect vividly in the rain puddles on the ground and on the car&#x27;s metallic surface. Blurred pedestrians with umbrellas walking in the background under soft atmospheric street fog. Intricate reflections, high dynamic range (HDR), dramatic contrast, neon lighting aesthetic, shot on a 35mm lens, f/1.8, cinematic composition, ultra-realistic, highly detailed social media marketing ad style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_CC-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_CC-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_CC-03.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="CC-03">
+            <option value="">-- Choose --</option>
+            <option value="IMG073">A</option><option value="IMG016">B</option><option value="IMG015">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>CC-04</h2>
+
+        <p class="prompt">
+            Create a premium food delivery campaign image showing a wooden dining table set for two in a modern apartment. Place a pizza in the center of the table, two glasses of sparkling water on the right, a bowl of salad on the left, and a smartphone displaying a food delivery app beside the pizza. Show one person reaching for a slice of pizza while another person holds the smartphone. In the background, include a softly lit kitchen with indoor plants and warm pendant lights. Use natural evening lighting, realistic food textures, and a polished lifestyle advertising style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_CC-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_CC-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_CC-04.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="CC-04">
+            <option value="">-- Choose --</option>
+            <option value="IMG074">A</option><option value="IMG018">B</option><option value="IMG017">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>CC-05</h2>
+
+        <p class="prompt">
+            Create a high-end smart home advertising image set in a modern living room during the evening. Show a family of three relaxing on a sofa, with a large television mounted on the wall in front of them. Place a smart speaker on a side table to the left, a smartphone displaying a home-control interface on the coffee table, and two smart lamps glowing with warm light on opposite sides of the room. Through the large window in the background, show a nighttime city skyline. Keep all devices clearly visible while maintaining a natural, realistic scene with balanced composition, premium lighting, and a professional technology campaign aesthetic.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_CC-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_CC-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_CC-05.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="CC-05">
+            <option value="">-- Choose --</option>
+            <option value="IMG075">A</option><option value="IMG020">B</option><option value="IMG019">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PL-01</h2>
+
+        <p class="prompt">
+            A candid lifestyle photograph of a professional woman in her late 20s sitting in a modern minimalist cafe, casually holding a smartphone while drinking coffee. She is wearing a smart-casual outfit. Natural morning sunlight enters through large windows, with green plants and a softly blurred cafe interior in the background. Warm color palette, realistic photography, professional social media marketing campaign style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PL-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PL-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PL-01.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PL-01">
+            <option value="">-- Choose --</option>
+            <option value="IMG021">A</option><option value="IMG022">B</option><option value="IMG051">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PL-02</h2>
+
+        <p class="prompt">
+            A candid lifestyle photograph of a diverse group of young adult friends enjoying a relaxed afternoon picnic in a sunny public park. They are sitting together on the grass, talking and laughing naturally, with coffee cups, tote bags, and picnic items nearby. Green trees and warm afternoon sunlight fill the background. Natural skin tones, warm colors, authentic lifestyle marketing photography style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PL-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PL-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PL-02.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PL-02">
+            <option value="">-- Choose --</option>
+            <option value="IMG052">A</option><option value="IMG024">B</option><option value="IMG023">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PL-03</h2>
+
+        <p class="prompt">
+            A candid lifestyle photograph of an elderly East Asian ceramic artisan carefully hand-painting intricate blue and teal floral patterns onto a ceramic vase inside a pottery workshop. She is wearing glasses and a work apron, with subtle paint marks on her hands. Ceramic bowls and pottery pieces appear softly blurred in the foreground. Warm natural light highlights her focused expression and craftsmanship. Shallow depth of field, rich warm colors, highly detailed, authentic cultural lifestyle campaign photography style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PL-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PL-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PL-03.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PL-03">
+            <option value="">-- Choose --</option>
+            <option value="IMG025">A</option><option value="IMG053">B</option><option value="IMG026">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PL-04</h2>
+
+        <p class="prompt">
+            A candid, nostalgic lifestyle photograph of a diverse group of young adult friends hanging out, talking, and laughing together in a cozy retro living room inspired by classic 1970s sitcom aesthetics. They are wearing recognizable 1970s-inspired fashion, including flare jeans, patterned knit sweaters, and earth-toned jackets. The room is decorated with a plush velvet sofa, warm patterned wallpaper, a low wooden coffee table with vintage-style soda cans and mugs, and warm ambient indoor lighting. Retro 35mm film aesthetic, soft cinematic film grain, rich tones of orange, brown, and mustard yellow, shallow depth of field, highly detailed, authentic social media lifestyle marketing campaign photography style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PL-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PL-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PL-04.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PL-04">
+            <option value="">-- Choose --</option>
+            <option value="IMG027">A</option><option value="IMG054">B</option><option value="IMG028">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PL-05</h2>
+
+        <p class="prompt">
+            A candid lifestyle photograph of two AI infrastructure engineers collaborating in a bright modern technology office. A female engineer is sketching an AI system architecture diagram on a transparent glass board while her colleague stands beside her holding a laptop and pointing toward the diagram. Natural sunlight illuminates the workspace, with office greenery and softly blurred server racks in the background. Realistic professional B2B technology marketing photography, natural skin tones, highly detailed.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PL-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PL-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PL-05.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PL-05">
+            <option value="">-- Choose --</option>
+            <option value="IMG030">A</option><option value="IMG029">B</option><option value="IMG055">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PO-01</h2>
+
+        <p class="prompt">
+            A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PO-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PO-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PO-01.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PO-01">
+            <option value="">-- Choose --</option>
+            <option value="IMG031">A</option><option value="IMG032">B</option><option value="IMG066">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PO-02</h2>
+
+        <p class="prompt">
+            A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PO-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PO-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PO-02.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PO-02">
+            <option value="">-- Choose --</option>
+            <option value="IMG067">A</option><option value="IMG034">B</option><option value="IMG033">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PO-03</h2>
+
+        <p class="prompt">
+            A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PO-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PO-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PO-03.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PO-03">
+            <option value="">-- Choose --</option>
+            <option value="IMG035">A</option><option value="IMG068">B</option><option value="IMG036">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PO-04</h2>
+
+        <p class="prompt">
+            A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PO-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PO-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PO-04.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PO-04">
+            <option value="">-- Choose --</option>
+            <option value="IMG069">A</option><option value="IMG038">B</option><option value="IMG037">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>PO-05</h2>
+
+        <p class="prompt">
+            A perfume bottle with its box slightly open beside it, floating layout on a bright blue gradient background.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_PO-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_PO-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_PO-05.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="PO-05">
+            <option value="">-- Choose --</option>
+            <option value="IMG070">A</option><option value="IMG040">B</option><option value="IMG039">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>TT-01</h2>
+
+        <p class="prompt">
+            Create a premium minimalist fashion poster.
+
+Use a subtle fashion-inspired background only. The background should support the design without competing with the text.
+
+Include exactly:
+
+NEW SEASON
+
+AUTUMN / WINTER 2026
+
+Modern Form. Timeless Style.
+
+DISCOVER NOW
+
+Use elegant editorial typography with strong hierarchy and generous spacing.
+
+Text and typography must be the main focus.
+
+Do not let background elements overlap or obstruct the text.
+
+Do not add any other text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_TT-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_TT-01.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_TT-01.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="TT-01">
+            <option value="">-- Choose --</option>
+            <option value="IMG041">A</option><option value="IMG056">B</option><option value="IMG042">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>TT-02</h2>
+
+        <p class="prompt">
+            Create a premium advertisement for a fictional running shoe brand.
+
+Use a subtle running-shoe or sports-inspired visual as a background element only.
+
+Include exactly:
+
+VELOCITY
+
+V1 PERFORMANCE
+
+Built for Speed.
+
+Weight: 245 g
+Drop: 8 mm
+
+699 SAR
+
+SHOP NOW
+
+Use bold modern sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep background imagery secondary and unobtrusive.
+
+Do not add any other text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_TT-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_TT-02.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_TT-02.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="TT-02">
+            <option value="">-- Choose --</option>
+            <option value="IMG057">A</option><option value="IMG043">B</option><option value="IMG044">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>TT-03</h2>
+
+        <p class="prompt">
+            Create a clean modern technology dashboard.
+
+Use subtle abstract technology graphics in the background only.
+
+Include exactly:
+
+SYSTEM STATUS
+
+GPU-A100-04
+
+Usage: 87%
+Latency: 42.8 ms
+Uptime: 99.99%
+Version: v2.4.1
+
+ONLINE
+
+Use clean technical typography with consistent spacing and alignment.
+
+Text and typography must be the main focus.
+
+Keep every character and value exactly as written.
+
+Do not let background graphics interfere with readability.
+
+Do not add any other text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_TT-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_TT-03.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_TT-03.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="TT-03">
+            <option value="">-- Choose --</option>
+            <option value="IMG045">A</option><option value="IMG058">B</option><option value="IMG046">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>TT-04</h2>
+
+        <p class="prompt">
+            Create a modern technology conference poster.
+
+Use subtle AI or technology imagery in the background only.
+
+Include exactly:
+
+AI SUMMIT 2026
+
+Build. Scale. Operate.
+
+22 October 2026
+
+09:00 — Cloud
+11:00 — AI Infrastructure
+14:00 — Data
+16:00 — Closing
+
+REGISTER NOW
+
+Use clear typography hierarchy and consistent alignment.
+
+Text and typography must be the main focus.
+
+Background imagery should remain secondary and must not overlap the text.
+
+Do not add any other text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_TT-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_TT-04.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_TT-04.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="TT-04">
+            <option value="">-- Choose --</option>
+            <option value="IMG059">A</option><option value="IMG048">B</option><option value="IMG047">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+    <section>
+        <h2>TT-05</h2>
+
+        <p class="prompt">
+            Create a premium professional tennis match poster.
+
+Use a subtle tennis court or tennis-inspired visual in the background only.
+
+Include exactly:
+
+CHAMPIONSHIP FINAL
+
+ALEX
+
+VS
+
+DANIEL
+
+Sunday, 18 October 2026
+
+7:30 PM
+
+CENTRE COURT
+
+Use bold sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep the background visually secondary and do not let it obstruct the text.
+
+Do not add any other text.
+        </p>
+
+        <div class="images">
+            
+        <div class="card">
+            <h3>Image A</h3>
+            <img src="../benchmark/results/images/bfl/4229ba19_TT-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image B</h3>
+            <img src="../benchmark/results/images/openai/4229ba19_TT-05.png">
+        </div>
+        
+        <div class="card">
+            <h3>Image C</h3>
+            <img src="../benchmark/results/images/google/ab9f43fe_TT-05.png">
+        </div>
+        
+        </div>
+
+        <label>
+           Which image is best for marketing?
+        </label>
+
+        <select class="choice" data-prompt="TT-05">
+            <option value="">-- Choose --</option>
+            <option value="IMG049">A</option><option value="IMG050">B</option><option value="IMG060">C</option>
+            <option value="TIE"> Tie </option>
+        </select>
+    </section>
+    
+
+<button onclick="downloadCSV()">Save Results as CSV</button>
+
+<script>
+
+function csvEscape(value) {
+    value = String(value ?? "");
+    return '"' + value.replaceAll('"', '""') + '"';
+}
+
+function downloadCSV() {
+
+    const evaluator =
+        document.getElementById("evaluator").value.trim();
+
+    if (!evaluator) {
+        alert("Please enter your name first");
+        return;
+    }
+
+    const choices =
+        document.querySelectorAll(".choice");
+
+    for (const choice of choices) {
+        if (!choice.value) {
+            alert(
+                "No choice selected for prompt: "
+                + choice.dataset.prompt
+            );
+            return;
+        }
+    }
+
+    const rows = [
+        [
+            "evaluator",
+            "prompt_id",
+            "selected_label",
+            "selected_image_id"
+        ]
+    ];
+
+    choices.forEach(choice => {
+
+        const label =
+            choice.options[
+                choice.selectedIndex
+            ].text;
+
+        rows.push([
+            evaluator,
+            choice.dataset.prompt,
+            label,
+            choice.value
+        ]);
+
+    });
+
+    const csv =
+        rows.map(
+            row => row.map(csvEscape).join(",")
+        ).join("\n");
+
+    const blob =
+        new Blob([csv], {type: "text/csv"});
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+    a.download =
+        "preference_" + evaluator + ".csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+</script>
+
+</body>
+</html>
