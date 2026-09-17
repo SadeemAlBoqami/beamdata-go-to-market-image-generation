@@ -6,16 +6,16 @@ EVALUATION_FILE = "evaluation_input.csv"
 MAPPING_FILE = "image_mapping.csv"
 BENCHMARK_FILE = "../benchmark/results/benchmark_results.csv"
 
-METRICS = [
-    "quality",
-    "prompt_adherence",
-    "composition",
-    "marketing_usefulness",
-    "visual_appeal",
-    "text_accuracy",
-    "people_anatomy",
-    "object_accuracy",
-]
+METRICS = {
+    "quality": "quality (1-5)",
+    "prompt_adherence": "prompt_adherence (1-5)",
+    "composition": "composition (1-5)",
+    "marketing_usefulness": "marketing_usefulness (1-5)",
+    "visual_appeal": "visual_appeal (1-5)",
+    "text_accuracy": "text_accuracy (1-5)",
+    "people_anatomy": "people_anatomy (1-5)",
+    "object_accuracy": "object_accuracy (1-5)",
+}
 
 # ---------- helpers ----------
 
@@ -93,8 +93,8 @@ with open(EVALUATION_FILE, encoding="utf-8-sig") as f:
             "model": model,
         }
 
-        for metric in METRICS:
-            score = parse_score(row.get(metric))
+        for metric, source_column in METRICS.items():
+            score = parse_score(row.get(source_column))
 
             detailed[metric] = "" if score is None else score
 
@@ -114,7 +114,7 @@ with open(
     encoding="utf-8"
 ) as f:
 
-    fields = ["model"] + METRICS
+    fields = ["model"] + list(METRICS.keys())
     writer = csv.DictWriter(f, fieldnames=fields)
 
     writer.writeheader()
@@ -142,7 +142,7 @@ with open(
     encoding="utf-8"
 ) as f:
 
-    fields = ["model", "category"] + METRICS
+    fields = ["model", "category"] + list(METRICS.keys())
     writer = csv.DictWriter(f, fieldnames=fields)
 
     writer.writeheader()
@@ -179,7 +179,7 @@ with open(
         "category",
         "provider",
         "model",
-    ] + METRICS
+    ] + list(METRICS.keys())
 
     writer = csv.DictWriter(f, fieldnames=fields)
     writer.writeheader()

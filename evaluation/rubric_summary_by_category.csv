@@ -1,1 +1,16 @@
 model,category,quality,prompt_adherence,composition,marketing_usefulness,visual_appeal,text_accuracy,people_anatomy,object_accuracy
+flux-2-pro,branding_advertising,5.0,4.0,5.0,4.0,4.8,4.4,N/A,4.0
+flux-2-pro,complex_compositions,4.75,4.25,5.0,4.0,4.75,4.5,3.5,4.5
+flux-2-pro,people_lifestyle,4.8,4.6,4.4,5.0,4.8,4.33,4.6,4.2
+flux-2-pro,products_objects,5.0,4.67,5.0,5.0,4.33,4.5,N/A,4.67
+flux-2-pro,text_typography,3.75,4.0,4.25,3.75,3.75,3.67,N/A,N/A
+gemini-3.1-flash-image,branding_advertising,5.0,4.2,4.8,4.4,4.8,3.6,N/A,4.6
+gemini-3.1-flash-image,complex_compositions,4.67,4.33,4.17,4.5,4.67,4.6,4.5,5.0
+gemini-3.1-flash-image,people_lifestyle,4.25,4.5,4.0,4.25,4.25,4.0,5.0,5.0
+gemini-3.1-flash-image,products_objects,5.0,4.25,5.0,5.0,4.75,5.0,N/A,5.0
+gemini-3.1-flash-image,text_typography,4.33,4.83,4.33,4.33,3.67,5.0,N/A,N/A
+gpt-image-2,branding_advertising,4.6,3.4,4.2,3.8,4.6,2.8,N/A,4.0
+gpt-image-2,complex_compositions,5.0,4.4,4.8,4.6,5.0,4.6,5.0,4.6
+gpt-image-2,people_lifestyle,5.0,4.33,5.0,4.5,4.83,3.67,4.67,4.4
+gpt-image-2,products_objects,5.0,4.4,4.6,5.0,4.2,5.0,N/A,4.6
+gpt-image-2,text_typography,4.2,5.0,4.0,4.4,4.4,5.0,N/A,5.0
