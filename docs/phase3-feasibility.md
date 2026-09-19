@@ -1,8 +1,8 @@
-# Phase 3 - Open-Source Model Feasibility Evaluation
+Phase 3 - Open-Source Model Feasibility Evaluation
 
 1. Test Environment
 
-## Test Environment
+Test Environment
 
 GPU: NVIDIA RTX A6000
 
@@ -20,11 +20,9 @@ Container Runtime: containerd
 
 GPU Count: 1
 
----
-
 2. Original Feasibility Template
 
-## FLUX.2 Klein 4B
+FLUX.2 Klein 4B
 
 Model:
 
@@ -34,7 +32,7 @@ Serving:
 
 vLLM-Omni
 
-### Feasibility Results
+Feasibility Results
 
 Model load:
 
@@ -72,9 +70,7 @@ Errors / observations:
 
 TBD
 
----
-
-## Stable Diffusion 3.5 Medium
+Stable Diffusion 3.5 Medium
 
 Model:
 
@@ -84,7 +80,7 @@ Serving:
 
 vLLM-Omni
 
-### Feasibility Results
+Feasibility Results
 
 Model load:
 
@@ -124,7 +120,7 @@ TBD
 
 3. Completed Feasibility Results
 
-## FLUX.2 Klein 4B
+FLUX.2 Klein 4B
 
 Model:
 
@@ -134,7 +130,7 @@ Serving:
 
 vLLM-Omni
 
-### Feasibility Results
+Feasibility Results
 
 Model load:
 
@@ -222,7 +218,7 @@ Serving runtime: vLLM-Omni
 
 FLUX.2 Klein 4B successfully serves and generates 512×512 images on the RTX A6000 48 GB development GPU, with 5/5 reliability and ~5.15 s average latency. Compatibility with the ~16 GB production VRAM target is not yet demonstrated and requires accurate peak-VRAM measurement and potentially runtime optimization.
 
-## Stable Diffusion 3.5 Medium
+Stable Diffusion 3.5 Medium
 
 Model:
 
@@ -270,8 +266,6 @@ SD 3.5 Medium is significantly faster than FLUX.2 Klein 4B at 512x512 in the cur
 
 Further optimization or quantization would be required to make it viable for a ~16 GB deployment target.
 
-
-
 4. Initial Model Comparison Notes
 
 FLUX.2 Klein 4B
@@ -302,149 +296,61 @@ FLUX.2 Klein 4B used slightly less VRAM than SD 3.5 Medium, but was significantl
 
 SD 3.5 Medium was substantially faster, but still far above the intended 16 GB deployment target.
 
-5. Raw Benchmark Session and Troubleshooting Notes
+Troubleshooting and Benchmark Procedure Notes
 
-Pasted text.txt
+Port-forward identification
 
-Document
+When multiple kubectl port-forward processes were active, ps and /proc/<pid>/cmdline
+did not expose the original arguments because the process title had been shortened to kubectl.
 
-Pasted markdown.md
-
-File
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ cut -d',' -f2 /tmp/sd35_1024_vram.csv | sort -n | tail -1
-
-35850odel: stabilityai/stable-diffusion-3.5-medium
-
-  Endpoint: http://localhost:8001
-
-  SUCCESS (4.064s) The difference is clear.
-
-ps -fp truncated the CMD output, so it did not show which service was associated with each process.
-
-Run these instead:
-
-ps -ww -fp 1155025
-
-Then:
-
-ps -ww -fp 1759969
-
-If it is still truncated, this prints the full command:
-
-tr '\0' ' ' < /proc/1155025/cmdline; echo
-
-tr '\0' ' ' < /proc/1759969/cmdline; echo
-
-We want to see whether it returns something like:
-
-kubectl port-forward svc/flux-klein -n lama 8000:8000
-
-or another service.
-
-Also, PID 1155025 has been running since Sep 18, so it is probably an older FLUX port-forward from the previous test session.
-
-PID 1759969 started at 22:08, so it is probably the one that was opened recently.
-
-Use the outputs to identify which port should be used for the FLUX 1024 test.
-
-buntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ ps -fp 1155025
-
-UID          PID    PPID  C STIME TTY          TIME CMD
-
-ubuntu   1155025 1106580  0 Sep18 pts/110  00:01:13 kubectl
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ ps -fp 1759969
-
-UID          PID    PPID  C STIME TTY          TIME CMD
-
-ubuntu   1759969 1112654  0 22:08 pts/90   00:00:00 kubectl
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ ps -ww -fp 1155025
-
-UID          PID    PPID  C STIME TTY          TIME CMD
-
-ubuntu   1155025 1106580  0 Sep18 pts/110  00:01:13 kubectl
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ ps -ww -fp 1759969
-
-UID          PID    PPID  C STIME TTY          TIME CMD
-
-ubuntu   1759969 1112654  0 22:08 pts/90   00:00:00 kubectl
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ tr '\0' ' ' < /proc/1155025/cmdline; echo
-
-kubectl                                      
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$ tr '\0' ' ' < /proc/1759969/cmdline; echo
-
-kubectl                                              
-
-ubuntu@aidc-t09:~/aidc/beamdata-go-to-market-image-generation$
-
-It appears that kubectl is changing the process title, so the arguments cannot be recovered from ps or /proc/cmdline.
-
-The simplest approach is to test the ports directly and see which one returns FLUX.
-
-Try:
+The practical method used to identify the correct FLUX endpoint was to query the available local ports:
 
 curl -s http://localhost:8000/v1/models
-
-Then:
-
 curl -s http://localhost:8002/v1/models
 
-The port that returns:
+The port returning:
 
 black-forest-labs/FLUX.2-klein-4B
 
-is the one to use.
+was selected as the FLUX endpoint.
 
-If port 8000 returns FLUX, run:
+Example:
 
 export FLUX_KLEIN_BASE_URL=http://localhost:8000
 
-If port 8002 returns FLUX, run:
+or:
 
 export FLUX_KLEIN_BASE_URL=http://localhost:8002
 
-Then run the 1024 benchmark:
+1024×1024 FLUX benchmark
 
-python3 benchmark/run_open_source_benchmark.py \
+The benchmark was executed using the FLUX endpoint and prompt PL-01.
 
-  --providers flux-klein \
-
-  --prompt-ids PL-01
-
-At the same time, keep VRAM monitoring running:
+VRAM was monitored continuously using:
 
 while true; do
-
-  echo -n "$(date +%H:%M:%S.%3N),"
-
-  nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits
-
-  sleep 0.2
-
+  echo -n "$(date +%H:%M:%S.%3N),"
+  nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits
+  sleep 0.2
 done | tee /tmp/flux_1024_vram.csv
 
-After it finishes:
+Peak observed VRAM was extracted using:
 
 cut -d',' -f2 /tmp/flux_1024_vram.csv | sort -n | tail -1
 
-Use the curl output from ports 8000 and 8002 to identify the correct endpoint.
+Observed FLUX result:
 
-rk/results/open_source_smoke_test_results.csv
+Model: black-forest-labs/FLUX.2-klein-4B
 
-PL-01 | flux-klein
+Endpoint: http://localhost:8002
 
-  Model: black-forest-labs/FLUX.2-klein-4B
+Resolution: 1024×1024
 
-  Endpoint: http://localhost:8002
+Success: PASS
 
-  SUCCESS (16.653s)',' -f2 /tmp/flux_1024_vram.csv | sort -n | tail -1
+Generation latency: 16.653 s
 
-34902
+Peak VRAM: 34,902 MiB
 
 6. Final 1024×1024 Comparison and Decision Options
 
@@ -494,7 +400,7 @@ SD 3.5 = 35.01 GiB
 
 FLUX uses approximately:
 
-948 MiB فقط ≈ 0.93 GiB
+948 MiB ≈ 0.93 GiB
 
 This is a small difference and does not materially change the overall conclusion.
 
@@ -584,4 +490,44 @@ But this is an extra decision, not necessary right away
 
 7. Report-Ready Summary
 
-Feasibility testing showed that both recommended open models could be served successfully on the available RTX A6000 (48 GB), but neither satisfied the approximate 16 GB VRAM target at 1024×1024 resolution. FLUX.2 Klein 4B reached ~34.1 GiB and required 16.65 seconds per image, while SD 3.5 Medium reached ~35.0 GiB and required 4.06 seconds per image. At 512×512, FLUX was much closer to the 16 GB target (~16.1 GiB), whereas SD 3.5 Medium still required ~31.6 GiB.ؤ
+Feasibility testing showed that both recommended open models could be served successfully on the available RTX A6000 (48 GB), but neither satisfied the approximate 16 GB VRAM target at 1024×1024 resolution. FLUX.2 Klein 4B reached ~34.1 GiB and required 16.65 seconds per image, while SD 3.5 Medium reached ~35.0 GiB and required 4.06 seconds per image. At 512×512, FLUX was much closer to the 16 GB target (~16.1 GiB), whereas SD 3.5 Medium still required ~31.6 GiB.
+
+Update:
+
+I completed the full official benchmark for FLUX.2 Klein 4B on all 25 prompts at 512×512.
+
+All 25/25 generations succeeded.
+
+Latency was consistent at about 5.1–5.3 seconds per image.
+
+Recorded peak VRAM was 34902 MiB.
+
+Results are saved in:
+
+benchmark/results/open_source_benchmark_results.csv
+
+| Metric       |                 FLUX.2 Klein 4B | SD 3.5 Medium |
+
+| ------------ | ------------------------------: | ------------: |
+
+| Success rate |                            100% |          100% |
+
+| Avg latency  |                          ~5.2 s |   1.236 s |
+
+| Peak VRAM    | ~34.9 GiB recorded in this run* | 31.62 GiB |
+
+| Resolution   |                         512×512 |       512×512 |
+
+Phase 3 update:
+
+I completed the full 25-prompt benchmark at 512×512 for both deployed models.
+
+FLUX.2 Klein 4B: 25/25 successful, 5.20s average latency.
+
+SD 3.5 Medium: 25/25 successful, 1.236s average latency, ~31.62 GiB recorded peak VRAM.
+
+SD3.5 is significantly faster, but its current configuration is well above the ~16 GB target.
+
+Can someone take SDXL Base 1.0 as the third candidate feasibility test @512×512 so we can compare all three candidates before confirming the final two?
+
+The current tested configurations do not meet the ~16 GB deployment target. Further candidate testing and/or memory optimization is required.
