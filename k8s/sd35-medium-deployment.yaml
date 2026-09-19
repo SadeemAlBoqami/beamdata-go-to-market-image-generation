@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sd35-medium
+  labels:
+    app: sd35-medium
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: sd35-medium
+
+  template:
+    metadata:
+      labels:
+        app: sd35-medium
+
+    spec:
+      containers:
+        - name: sd35-medium
+          image: lamai7/sd35-medium-vllm:phase3
+
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-secret
+                  key: token
+
+          ports:
+            - containerPort: 8000
+
+          resources:
+            requests:
+              cpu: "4"
+              memory: "12Gi"
+              nvidia.com/gpu: 1
+
+            limits:
+              cpu: "8"
+              memory: "24Gi"
+              nvidia.com/gpu: 1
+
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /root/.cache/huggingface
+
+      volumes:
+        - name: hf-cache
+          hostPath:
+            path: /var/lib/hf-cache
+            type: Directory

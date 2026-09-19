@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux-klein
+  labels:
+    app: flux-klein
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flux-klein
+  template:
+    metadata:
+      labels:
+        app: flux-klein
+    spec:
+      containers:
+        - name: flux-klein
+          image: lamai7/flux-klein-vllm:phase3-v2
+
+          ports:
+            - containerPort: 8000
+
+          resources:
+            requests:
+              cpu: "4"
+              memory: "12Gi"
+              nvidia.com/gpu: 1
+
+            limits:
+              cpu: "8"
+              memory: "24Gi"
+              nvidia.com/gpu: 1
+
+          #env:
+           # - name: HF_TOKEN
+            #  valueFrom:
+               # secretKeyRef:
+               #   name: hf-secret
+                #  key: token
+
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /root/.cache/huggingface
+
+      volumes:
+        - name: hf-cache
+          hostPath:
+            path: /var/lib/hf-cache
+            type: Directory
