@@ -18,7 +18,6 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 
 PROMPTS_FILE = SCRIPT_DIR / "prompts" / "benchmark_prompts.json"
 RESULTS_DIR = SCRIPT_DIR / "results"
-IMAGES_DIR = RESULTS_DIR / "images"
 
 DEFAULT_WIDTH = 512
 DEFAULT_HEIGHT = 512
@@ -47,6 +46,26 @@ PROVIDERS = {
             "stabilityai/stable-diffusion-3.5-medium",
         ),
     },
+        "sdxl-base": {
+        "base_url": os.getenv(
+            "SDXL_BASE_URL",
+            "http://localhost:8001",
+        ),
+        "model": os.getenv(
+            "SDXL_MODEL",
+            "/models/sdxl-fp16",
+        ),
+    },
+        "z-image-turbo": {
+        "base_url": os.getenv(
+            "Z_IMAGE_TURBO_BASE_URL",
+            "http://localhost:8003",
+        ),
+        "model": os.getenv(
+            "Z_IMAGE_TURBO_MODEL",
+            "/models/z-image-turbo",
+        ),
+    },
 }
 
 
@@ -69,11 +88,22 @@ def validate_official_set(prompts):
         raise ValueError(f"Expected 25 prompts, found {len(prompts)}")
 
 
-def ensure_dirs():
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+def get_run_paths(width, height):
+    resolution_name = (
+        str(width)
+        if width == height
+        else f"{width}x{height}"
+    )
+
+    run_results_dir = RESULTS_DIR / "baseline" / resolution_name
+    run_images_dir = run_results_dir / "images"
+
+    run_results_dir.mkdir(parents=True, exist_ok=True)
 
     for provider in PROVIDERS:
-        (IMAGES_DIR / provider).mkdir(parents=True, exist_ok=True)
+        (run_images_dir / provider).mkdir(parents=True, exist_ok=True)
+
+    return run_results_dir, run_images_dir
 
 
 def image_size_bytes(path):
@@ -130,6 +160,7 @@ def generate_image(
     run_id,
     width,
     height,
+    images_dir,
     vram_sample_interval_seconds,
 ):
     config = PROVIDERS[provider]
@@ -178,7 +209,7 @@ def generate_image(
 
         short_run = run_id.split("-")[0]
         output_path = (
-            IMAGES_DIR
+            images_dir
             / provider
             / f"{short_run}_{prompt_item['prompt_id']}.png"
         )
@@ -241,7 +272,7 @@ def run_benchmark(
     height=DEFAULT_HEIGHT,
     vram_sample_interval_seconds=VRAM_SAMPLE_INTERVAL_SECONDS,
 ):
-    ensure_dirs()
+    run_results_dir, run_images_dir = get_run_paths(width, height)
 
     prompts = load_prompts()
 
@@ -263,10 +294,10 @@ def run_benchmark(
 
     run_id = str(uuid.uuid4())
 
-    csv_file = RESULTS_DIR / (
-        "open_source_benchmark_results.csv"
+    csv_file = run_results_dir / (
+        "benchmark_results.csv"
         if all_prompts
-        else "open_source_smoke_test_results.csv"
+        else "smoke_test_results.csv"
     )
 
     gpu_name = get_gpu_name()
@@ -300,6 +331,7 @@ def run_benchmark(
                     run_id=run_id,
                     width=width,
                     height=height,
+                    images_dir=run_images_dir,
                     vram_sample_interval_seconds=vram_sample_interval_seconds,
                 )
                 success = True

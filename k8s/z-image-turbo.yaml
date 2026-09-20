@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: z-image-turbo
+  namespace: sadeem
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: z-image-turbo
+
+  template:
+    metadata:
+      labels:
+        app: z-image-turbo
+
+    spec:
+      containers:
+        - name: z-image-turbo
+          image: docker.io/sadeemalboqami/sdxl-vllm:phase3
+          imagePullPolicy: Never
+
+          command:
+            - vllm
+            - serve
+            - /models/z-image-turbo
+            - --omni
+            - --diffusion-load-format
+            - diffusers
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+
+          ports:
+            - containerPort: 8000
+
+          resources:
+            requests:
+              cpu: "4"
+              memory: "12Gi"
+              nvidia.com/gpu: 1
+            limits:
+              cpu: "8"
+              memory: "24Gi"
+              nvidia.com/gpu: 1
+
+          volumeMounts:
+            - name: model
+              mountPath: /models/z-image-turbo
+              readOnly: true
+
+      volumes:
+        - name: model
+          hostPath:
+            path: /data/models/z-image-turbo
+            type: Directory
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: z-image-turbo
+  namespace: sadeem
+
+spec:
+  selector:
+    app: z-image-turbo
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

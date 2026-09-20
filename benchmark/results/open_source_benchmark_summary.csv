@@ -1,3 +1,4 @@
 provider,model,successful_generations,average_latency_seconds,median_latency_seconds,min_latency_seconds,max_latency_seconds,peak_vram_mib,peak_vram_gib
 flux-klein,black-forest-labs/FLUX.2-klein-4B,25,5.2,5.186,5.121,5.261,34902,34.08
 sd35-medium,stabilityai/stable-diffusion-3.5-medium,25,1.236,1.226,1.215,1.4,32380,31.62
+sdxl-base,/models/sdxl-fp16,25,4.438,4.42,4.305,4.747,8419,8.22
