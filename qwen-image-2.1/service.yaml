@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-image-2-1
+  namespace: lama
+spec:
+  selector:
+    app: qwen-image-2-1
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

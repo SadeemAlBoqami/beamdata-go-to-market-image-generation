@@ -1,0 +1,10 @@
+Model: Qwen-Image-2.1
+Runtime: Diffusers
+Resolution: 512x512
+Status: Success
+Generation Time: 116.51 s
+Peak VRAM: 16.38 GiB
+Notes:
+- QwenImage21Pipeline successfully loaded using diffusers 0.41.0.dev0.
+- Current vLLM-Omni runtime does not register QwenImage21Pipeline.
+- Full benchmark deferred until image quality is reviewed.

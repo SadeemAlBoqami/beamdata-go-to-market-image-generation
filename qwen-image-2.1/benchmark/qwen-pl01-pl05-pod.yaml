@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qwen-pl01-pl05
+  namespace: lama
+spec:
+  restartPolicy: Never
+  containers:
+    - name: qwen
+      image: vllm/vllm-omni:nightly
+      command:
+        - sh
+        - -lc
+        - |
+          pip install --no-cache-dir -q "git+https://github.com/huggingface/diffusers.git"
+          python3 /workspace/qwen-image-2.1/benchmark/run_qwen_people_lifestyle.py
+      resources:
+        requests:
+          cpu: "4"
+          memory: "24Gi"
+          nvidia.com/gpu: "1"
+        limits:
+          cpu: "8"
+          memory: "48Gi"
+          nvidia.com/gpu: "1"
+      volumeMounts:
+        - name: qwen-model
+          mountPath: /models/qwen-image-2.1
+          readOnly: true
+        - name: workspace
+          mountPath: /workspace
+  volumes:
+    - name: qwen-model
+      hostPath:
+        path: /data/models/qwen-image-2.1
+        type: Directory
+    - name: workspace
+      hostPath:
+        path: /home/ubuntu/aidc/beamdata-go-to-market-image-generation
+        type: Directory

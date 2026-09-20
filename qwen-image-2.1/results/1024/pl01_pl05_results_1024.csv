@@ -1,0 +1,6 @@
+prompt_id,width,height,success,generation_time_seconds,peak_vram_mib,image_path,error
+PL-01,1024,1024,True,145.378,17331,/workspace/qwen-image-2.1/results/1024/PL-01.png,
+PL-02,1024,1024,True,85.223,17329,/workspace/qwen-image-2.1/results/1024/PL-02.png,
+PL-03,1024,1024,True,74.72,17345,/workspace/qwen-image-2.1/results/1024/PL-03.png,
+PL-04,1024,1024,True,66.858,17331,/workspace/qwen-image-2.1/results/1024/PL-04.png,
+PL-05,1024,1024,True,62.601,17343,/workspace/qwen-image-2.1/results/1024/PL-05.png,

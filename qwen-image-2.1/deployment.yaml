@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qwen-image-2-1
+  namespace: lama
+spec:
+  replicas: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: qwen-image-2-1
+  template:
+    metadata:
+      labels:
+        app: qwen-image-2-1
+    spec:
+      containers:
+        - name: qwen-image-2-1
+          image: vllm/vllm-omni:nightly
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -lc
+            - |
+              python3 -m pip install --no-cache-dir -U git+https://github.com/huggingface/diffusers && \
+              vllm serve /models/qwen-image-2.1 \
+                --omni \
+                --host 0.0.0.0 \
+                --port 8000
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "4"
+              memory: "12Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "8"
+              memory: "24Gi"
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: qwen-model
+              mountPath: /models/qwen-image-2.1
+              readOnly: true
+      volumes:
+        - name: qwen-model
+          hostPath:
+            path: /data/models/qwen-image-2.1
+            type: Directory
