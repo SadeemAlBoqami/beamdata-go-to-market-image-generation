@@ -141,7 +141,7 @@ The feasibility stage evaluates:
 | **SDXL Base 1.0** | 25/25 | **4.44 s** | **8.22 GiB** | ✅ | **Visually very poor / unacceptable in our tested outputs** | **Excluded from final shortlist** |
 | **Z-Image-Turbo** | 25/25 | **19.14 s** | **21.11 GiB** | ✅ | Very good; fewer visual errors than FLUX in our review | **Strong candidate** |
 | **Qwen-Image-2.1 — Diffusers run** | 25/25 | **49.64 s** | **16.95 GiB** | Not final serving path | Strong quality; closest measured run to the ~16 GB target | Candidate evidence only |
-| **Qwen-Image-2.1 — vLLM-Omni** | **25/25 ✅** | **Summary pending** | **≥34,845 MiB observed** | ✅ | Full API benchmark completed successfully | **Strong candidate** |
+| **Qwen-Image-2.1 — vLLM-Omni** | **25/25 ✅** | **7.77s** | **34,03 GiB** | ✅ | Full API benchmark completed successfully | **Strong candidate** |
 | **OmniGen2** | Smoke test | ~6.08 s wall time | ~23.26 GiB observed | ✅ | Acceptable image; weak generated text | Feasibility only |
 
 > **Important:** VRAM figures should be compared together with the runtime configuration. Measurements from different serving paths are not automatically equivalent.
