@@ -137,11 +137,11 @@ The feasibility stage evaluates:
 | Model | Result | Avg Latency | Peak VRAM | vLLM / Omni | Visual Outcome | Current Decision |
 |---|---:|---:|---:|---|---|---|
 | **FLUX.2 Klein 4B** | 25/25 | **5.20 s** | **34.08 GiB** | ✅ | Good, but more visible errors than Z in our outputs | Candidate |
-| **Stable Diffusion 3.5 Medium** | 25/25 | **1.24 s** | **31.62 GiB** | ✅ | Good and very fast | Strong fallback |
-| **SDXL Base 1.0** | 25/25 | **4.44 s** | **8.22 GiB** | ✅ | Unacceptable prompt adherence / visual output in tested serving configuration | Excluded from final shortlist |
+| **Stable Diffusion 3.5 Medium** | 25/25 | **1.24 s** | **31.62 GiB** | ✅ | **Visually very poor in our tested outputs** | **Excluded from final shortlist** |
+| **SDXL Base 1.0** | 25/25 | **4.44 s** | **8.22 GiB** | ✅ | **Visually very poor / unacceptable in our tested outputs** | **Excluded from final shortlist** |
 | **Z-Image-Turbo** | 25/25 | **19.14 s** | **21.11 GiB** | ✅ | Very good; fewer visual errors than FLUX in our review | **Strong candidate** |
 | **Qwen-Image-2.1 — Diffusers run** | 25/25 | **49.64 s** | **16.95 GiB** | Not final serving path | Strong quality; closest measured run to the ~16 GB target | Candidate evidence only |
-| **Qwen-Image-2.1 — vLLM-Omni** | 🔄 25-run benchmark now running | TBD | TBD | ✅ | API smoke test successful | **Strong candidate** |
+| **Qwen-Image-2.1 — vLLM-Omni** | **25/25 ✅** | **Summary pending** | **≥34,845 MiB observed** | ✅ | Full API benchmark completed successfully | **Strong candidate** |
 | **OmniGen2** | Smoke test | ~6.08 s wall time | ~23.26 GiB observed | ✅ | Acceptable image; weak generated text | Feasibility only |
 
 > **Important:** VRAM figures should be compared together with the runtime configuration. Measurements from different serving paths are not automatically equivalent.
@@ -203,60 +203,85 @@ Observed during startup:
 
 This removes the major technical blocker that previously prevented Qwen-Image-2.1 from being considered for the final vLLM/vLLM-Omni deployment requirement.
 
-The **full 25-prompt benchmark through the vLLM-Omni API is now running** so that final latency and VRAM measurements come from the actual serving path.
+The **full 25-prompt benchmark through the vLLM-Omni API is now complete (25/25 successful)**. The final supplied runs completed at ~7.8 seconds each, and the observed GPU memory reached **34,845 MiB (~34.03 GiB)** in the final prompt. A complete CSV summary will be used for the official average / median / min / max latency and full-run peak VRAM.
 
 ---
 
 # 7. Current Shortlist
 
-## Leading Candidates
+## Final Candidates Under Comparison
+
+The current shortlist is now **three models only**:
+
+1. **FLUX.2 Klein 4B**
+2. **Qwen-Image-2.1**
+3. **Z-Image-Turbo**
+
+These three remain under final comparison using image quality, prompt adherence, latency, VRAM, reliability, vLLM/vLLM-Omni compatibility, and deployment complexity.
+
+### FLUX.2 Klein 4B
+**Why it remains a candidate:**
+
+- 25/25 successful 512 benchmark
+- vLLM/vLLM-Omni serving demonstrated
+- Fast generation compared with Z and Qwen
+- 5.20 s average latency in the recorded 512 run
+
+**Main trade-offs:**
+
+- 34.08 GiB peak VRAM in the recorded 512 run
+- More visible generation errors than Z in our visual review
+
+### Qwen-Image-2.1
+**Why it is a strong candidate:**
+
+- 25/25 successful 512 benchmark through Diffusers
+- **25/25 successful 512 benchmark through the actual vLLM-Omni HTTP API**
+- Strong image quality in our review
+- Qwen vLLM-Omni compatibility blocker has been solved
+- Real `/v1/images/generations` serving path validated
+- Final benchmark requests completed successfully, with the last runs around **7.8 s/image**
+
+**Current trade-offs / items to summarize:**
+
+- vLLM-Omni uses substantially more VRAM than the previous Diffusers benchmark
+- Final supplied run reached **34,845 MiB (~34.03 GiB)**
+- Full CSV summary is still needed for official average / median / min / max latency and full-run peak VRAM
+- Final license suitability still needs to be documented
 
 ### Z-Image-Turbo
-**Why it remains strong:**
+**Why it remains a strong candidate:**
 
 - 25/25 successful benchmark
-- Good visual quality in our review
+- Very good visual quality in our review
 - Fewer visible generation errors than FLUX in our tested outputs
 - vLLM-Omni serving demonstrated
 - Reasonable deployment path
 
-**Main trade-off:**
+**Main trade-offs:**
 
 - 21.11 GiB peak VRAM in the recorded 512 run
 - ~19.14 s average latency
-
-### Qwen-Image-2.1
-**Why it is now strong:**
-
-- 25/25 successful 512 benchmark through Diffusers
-- Strong image quality in our review
-- Previous benchmark reached ~16.95 GiB peak VRAM
-- Qwen vLLM-Omni compatibility issue has now been solved
-- Real vLLM-Omni API generation succeeded
-
-**Current questions being validated:**
-
-- Final 25-prompt vLLM-Omni latency
-- Final vLLM-Omni peak VRAM
-- Whether runtime optimization is needed to approach the ~16 GB target
-- Final license suitability for the intended deployment scenario
-
-### Stable Diffusion 3.5 Medium
-Kept as a strong engineering fallback because it is highly reliable and significantly faster than the other tested candidates, although the measured VRAM is above the target environment.
 
 ---
 
 # 8. Models Not Selected for the Current Final Shortlist
 
+## Stable Diffusion 3.5 Medium
+
+The model was technically fast and reliable, but **the visual outputs were very poor in our evaluation**, so it is not being considered for the final shortlist despite strong latency numbers.
+
+**Engineering conclusion:** exclude it because image quality / prompt adherence is a core project requirement, not just latency.
+
 ## SDXL Base 1.0
 
-Technically efficient in the tested configuration, but the generated outputs showed unacceptable prompt adherence / visual quality. A diagnostic FP32 test did not resolve the tested output problem.
+The model was technically efficient in VRAM and latency, but **the visual outputs were also very poor / unacceptable in the tested configuration**, including weak prompt adherence. A diagnostic FP32 test did not solve the observed output problem.
 
-**Engineering conclusion:** exclude the tested SDXL serving configuration rather than spend final-project time optimizing a candidate that currently fails the quality requirement.
+**Engineering conclusion:** exclude the tested SDXL configuration from the final shortlist.
 
 ## OmniGen2
 
-Successfully loaded and generated an image, but only a smoke test was completed. Generated text quality was weaker, and we already have stronger candidates with more complete benchmark evidence.
+Successfully loaded and generated an image, but only a smoke test was completed. Generated text quality was weaker, and the project already has three stronger candidates with more complete benchmark evidence.
 
 ---
 
@@ -290,9 +315,9 @@ This allows the final model choice to be justified using measured evidence rathe
 Commercial benchmark              ██████████ 100% ✅
 Commercial evaluation             ██████████ 100% ✅
 OSS feasibility testing            █████████░  90% 🔄
-Final candidate validation         ████████░░  80% 🔄
-vLLM/Omni serving validation       █████████░  90% 🔄
-Final 512 benchmarks               ████████░░  80% 🔄
+Final candidate validation         █████████░  90% 🔄
+vLLM/Omni serving validation       ██████████ 100% ✅
+Final 512 benchmarks               █████████░  90% 🔄
 Authenticated final API            ███░░░░░░░  30% 🔄
 Side-by-side human evaluation      ██░░░░░░░░  20% ⏳
 Final report & presentation        ████░░░░░░  40% 🔄
@@ -305,27 +330,26 @@ Final report & presentation        ████░░░░░░  40% 🔄
 # 11. What We Are Doing Right Now
 
 ### Current Task
-Run the **full 25-prompt 512×512 benchmark for Qwen-Image-2.1 through the working vLLM-Omni HTTP API**.
+Summarize the newly completed **Qwen-Image-2.1 vLLM-Omni 25/25 benchmark** and compare it directly with **FLUX.2 Klein 4B** and **Z-Image-Turbo**.
 
 ### Goal
-Replace the previous standalone Diffusers performance numbers with measurements from the actual serving stack that can be used for final deployment evaluation.
+Produce the final evidence table for the three remaining candidates using the same decision criteria: image quality, prompt adherence, latency, VRAM, reliability, and serving compatibility.
 
-### Success Criteria
+### Latest Qwen Result
 
-- 25/25 prompts complete successfully
-- 25 images saved
-- Average / median / min / max latency calculated
-- Peak VRAM captured
-- No serving failures
-- Image quality reviewed
+- **25/25 prompts completed successfully through vLLM-Omni**
+- Last four prompts (`CC-02` → `CC-05`) each completed in approximately **7.8 s**
+- Highest VRAM value visible in the supplied final rows: **34,845 MiB (~34.03 GiB)**
+- No failures were reported in the completed run
+- Full CSV summary is the next step for exact average / median / min / max and full-run peak VRAM
 
 ---
 
 # 12. Immediate Next Steps
 
-1. **Finish Qwen vLLM-Omni 25-prompt benchmark**
-2. **Summarize Qwen latency + VRAM + reliability**
-3. **Compare Qwen vs Z vs SD3.5 using the official selection criteria**
+1. **Summarize the completed Qwen vLLM-Omni CSV**
+2. **Compare FLUX vs Qwen vs Z using the official selection criteria**
+3. **Perform visual side-by-side review of the three candidates**
 4. **Confirm the final two models**
 5. **Containerize / finalize Kubernetes inference services**
 6. **Add Bearer-token or API-key authentication**
@@ -349,20 +373,20 @@ Replace the previous standalone Diffusers performance numbers with measurements 
 - Completed the commercial-model benchmark and evaluation
 - Tested multiple open-source image models
 - Collected latency, VRAM, reliability, and image outputs
-- Excluded SDXL based on measured quality problems in the tested configuration
-- Identified Z-Image-Turbo and Qwen-Image-2.1 as leading candidates
+- Excluded **SDXL Base** and **Stable Diffusion 3.5 Medium** because their tested visual outputs were very poor
+- Identified **FLUX.2 Klein, Qwen-Image-2.1, and Z-Image-Turbo** as the three current finalists
 - Diagnosed and solved the Qwen-Image-2.1 vLLM-Omni compatibility blocker
-- Successfully generated an image through the Qwen vLLM-Omni HTTP API
+- Successfully completed **25/25 Qwen images through the vLLM-Omni HTTP API**
 
 ## Where are we now?
 
 **Final candidate validation and deployment benchmarking.**
 
-The Qwen-Image-2.1 25-prompt vLLM-Omni benchmark is currently running.
+The Qwen-Image-2.1 25-prompt vLLM-Omni benchmark is **complete (25/25)**. We are now comparing **FLUX vs Qwen vs Z** and preparing the final two-model selection.
 
 ## What is next?
 
-Finalize the two models, add authenticated production-style endpoints, complete side-by-side human evaluation, and finish the final report.
+Summarize Qwen performance, compare **FLUX vs Qwen vs Z**, select the final two models, add authenticated production-style endpoints, complete side-by-side human evaluation, and finish the final report.
 
 ---
 
@@ -374,5 +398,5 @@ We are now comparing **deployable inference services** using measurable engineer
 
 **quality + prompt adherence + latency + VRAM + reliability + serving compatibility + deployment complexity.**
 
-The strongest current progress is the successful transition of **Qwen-Image-2.1 from standalone experimentation to working vLLM-Omni API serving**, removing a key blocker before final model selection.
+The strongest current progress is the successful transition of **Qwen-Image-2.1 from standalone experimentation to a complete 25/25 vLLM-Omni API benchmark**. The final shortlist is now **FLUX.2 Klein + Qwen-Image-2.1 + Z-Image-Turbo**, while SDXL and SD3.5 have been excluded due to poor visual results in our testing.
 
