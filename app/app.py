@@ -4,6 +4,9 @@ from pathlib import Path
 
 import gradio as gr
 
+APP_DIR = Path(__file__).resolve().parent
+CSS_PATH = APP_DIR / "assets" / "custom.css"
+
 try:  # Supports both `python -m app.app` and `python app/app.py`.
     from .components.evaluation import build_evaluation_section
     from .components.generation import build_generation_section
@@ -13,7 +16,7 @@ except ImportError:  # pragma: no cover - convenience for direct execution
 
 
 def _load_css() -> str:
-    return (Path(__file__).parent / "assets" / "custom.css").read_text(encoding="utf-8")
+    return CSS_PATH.read_text(encoding="utf-8")
 
 
 def load_benchmark_results_placeholder() -> dict:
