@@ -33,12 +33,8 @@ RUN /root/.local/bin/uv pip install \
     --python /opt/venv/bin/python \
     --index-url https://download.pytorch.org/whl/cu129 \
     "torch==2.13.0+cu129" \
-    "torchvision==0.28.0+cu129"
-
-# Audio support is not required for image generation
-RUN /root/.local/bin/uv pip uninstall \
-    --python /opt/venv/bin/python \
-    torchaudio
+    "torchvision==0.28.0+cu129" \
+    "torchaudio==2.11.0+cu129"
 
 # Verify reproducible runtime versions
 RUN /opt/venv/bin/python - <<'PYVERIFY'
@@ -47,6 +43,7 @@ from importlib.metadata import version
 packages = {
     "torch": "2.13.0+cu129",
     "torchvision": "0.28.0+cu129",
+    "torchaudio": "2.11.0+cu129",
     "vllm": "0.29.0+cu129",
     "vllm-gguf-plugin": "0.0.5",
 }
