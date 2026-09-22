@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omnigen2
+  namespace: sadeem
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: omnigen2
+
+  template:
+    metadata:
+      labels:
+        app: omnigen2
+
+    spec:
+      containers:
+        - name: omnigen2
+          image: docker.io/sadeemalboqami/sdxl-vllm:phase3
+          imagePullPolicy: Never
+
+          command:
+            - vllm
+            - serve
+            - /models/omnigen2
+            - --omni
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+
+          ports:
+            - containerPort: 8000
+
+          resources:
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              nvidia.com/gpu: 1
+            limits:
+              cpu: "8"
+              memory: "40Gi"
+              nvidia.com/gpu: 1
+
+          volumeMounts:
+            - name: model
+              mountPath: /models/omnigen2
+              readOnly: true
+
+      volumes:
+        - name: model
+          hostPath:
+            path: /data/models/omnigen2
+            type: Directory
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omnigen2
+  namespace: sadeem
+
+spec:
+  selector:
+    app: omnigen2
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP
