@@ -30,6 +30,9 @@ RUN git clone https://github.com/vllm-project/vllm-omni.git /opt/vllm-omni \
        --python /opt/venv/bin/python \
        -e .
 
+# Re-pin exact PyTorch CUDA 12.9 stack after vLLM-Omni dependency resolution
+RUN /root/.local/bin/uv pip install     --python /opt/venv/bin/python     --index-url https://download.pytorch.org/whl/cu129     "torch==2.13.0+cu129"     "torchvision==0.28.0+cu129"
+
 # Exact quantization dependency used in successful run
 RUN /root/.local/bin/uv pip install \
     --python /opt/venv/bin/python \
@@ -40,6 +43,7 @@ RUN /opt/venv/bin/python - <<'PYVERIFY'
 from importlib.metadata import version
 
 packages = {
+    "torch": "2.13.0+cu129",
     "vllm": "0.29.0+cu129",
     "bitsandbytes": "0.50.2",
 }
