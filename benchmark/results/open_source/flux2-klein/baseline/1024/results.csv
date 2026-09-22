@@ -1,0 +1,147 @@
+run_id,run_type,prompt_id,prompt,category,provider,model,width,height,generation_time_seconds,peak_vram_mib_observed,gpu_used,success,error,image_path,image_size_bytes,timestamp,seed
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PL-01,"A candid lifestyle photograph of a professional woman in her late 20s sitting in a modern minimalist cafe, casually holding a smartphone while drinking coffee. She is wearing a smart-casual outfit. Natural morning sunlight enters through large windows, with green plants and a softly blurred cafe interior in the background. Warm color palette, realistic photography, professional social media marketing campaign style.",people_lifestyle,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.693,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PL-01.png,3147861,2026-09-20T12:58:44.137078+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PL-02,"A candid lifestyle photograph of a diverse group of young adult friends enjoying a relaxed afternoon picnic in a sunny public park. They are sitting together on the grass, talking and laughing naturally, with coffee cups, tote bags, and picnic items nearby. Green trees and warm afternoon sunlight fill the background. Natural skin tones, warm colors, authentic lifestyle marketing photography style.",people_lifestyle,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.659,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PL-02.png,3147861,2026-09-20T12:59:00.857685+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PL-03,"A candid lifestyle photograph of an elderly East Asian ceramic artisan carefully hand-painting intricate blue and teal floral patterns onto a ceramic vase inside a pottery workshop. She is wearing glasses and a work apron, with subtle paint marks on her hands. Ceramic bowls and pottery pieces appear softly blurred in the foreground. Warm natural light highlights her focused expression and craftsmanship. Shallow depth of field, rich warm colors, highly detailed, authentic cultural lifestyle campaign photography style.",people_lifestyle,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.636,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PL-03.png,3147861,2026-09-20T12:59:17.552127+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PL-04,"A candid, nostalgic lifestyle photograph of a diverse group of young adult friends hanging out, talking, and laughing together in a cozy retro living room inspired by classic 1970s sitcom aesthetics. They are wearing recognizable 1970s-inspired fashion, including flare jeans, patterned knit sweaters, and earth-toned jackets. The room is decorated with a plush velvet sofa, warm patterned wallpaper, a low wooden coffee table with vintage-style soda cans and mugs, and warm ambient indoor lighting. Retro 35mm film aesthetic, soft cinematic film grain, rich tones of orange, brown, and mustard yellow, shallow depth of field, highly detailed, authentic social media lifestyle marketing campaign photography style.",people_lifestyle,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.755,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PL-04.png,3147861,2026-09-20T12:59:34.369580+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PL-05,"A candid lifestyle photograph of two AI infrastructure engineers collaborating in a bright modern technology office. A female engineer is sketching an AI system architecture diagram on a transparent glass board while her colleague stands beside her holding a laptop and pointing toward the diagram. Natural sunlight illuminates the workspace, with office greenery and softly blurred server racks in the background. Realistic professional B2B technology marketing photography, natural skin tones, highly detailed.",people_lifestyle,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.747,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PL-05.png,3147861,2026-09-20T12:59:51.194790+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,TT-01,"Create a premium minimalist fashion poster.
+
+Use a subtle fashion-inspired background only. The background should support the design without competing with the text.
+
+Include exactly:
+
+NEW SEASON
+
+AUTUMN / WINTER 2026
+
+Modern Form. Timeless Style.
+
+DISCOVER NOW
+
+Use elegant editorial typography with strong hierarchy and generous spacing.
+
+Text and typography must be the main focus.
+
+Do not let background elements overlap or obstruct the text.
+
+Do not add any other text.",text_typography,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.781,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_TT-01.png,3147861,2026-09-20T13:00:08.034960+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,TT-02,"Create a premium advertisement for a fictional running shoe brand.
+
+Use a subtle running-shoe or sports-inspired visual as a background element only.
+
+Include exactly:
+
+VELOCITY
+
+V1 PERFORMANCE
+
+Built for Speed.
+
+Weight: 245 g
+Drop: 8 mm
+
+699 SAR
+
+SHOP NOW
+
+Use bold modern sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep background imagery secondary and unobtrusive.
+
+Do not add any other text.",text_typography,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.85,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_TT-02.png,3147861,2026-09-20T13:00:24.944383+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,TT-03,"Create a clean modern technology dashboard.
+
+Use subtle abstract technology graphics in the background only.
+
+Include exactly:
+
+SYSTEM STATUS
+
+GPU-A100-04
+
+Usage: 87%
+Latency: 42.8 ms
+Uptime: 99.99%
+Version: v2.4.1
+
+ONLINE
+
+Use clean technical typography with consistent spacing and alignment.
+
+Text and typography must be the main focus.
+
+Keep every character and value exactly as written.
+
+Do not let background graphics interfere with readability.
+
+Do not add any other text.",text_typography,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.866,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_TT-03.png,3147861,2026-09-20T13:00:41.869977+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,TT-04,"Create a modern technology conference poster.
+
+Use subtle AI or technology imagery in the background only.
+
+Include exactly:
+
+AI SUMMIT 2026
+
+Build. Scale. Operate.
+
+22 October 2026
+
+09:00 — Cloud
+11:00 — AI Infrastructure
+14:00 — Data
+16:00 — Closing
+
+REGISTER NOW
+
+Use clear typography hierarchy and consistent alignment.
+
+Text and typography must be the main focus.
+
+Background imagery should remain secondary and must not overlap the text.
+
+Do not add any other text.",text_typography,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.915,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_TT-04.png,3147861,2026-09-20T13:00:58.849387+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,TT-05,"Create a premium professional tennis match poster.
+
+Use a subtle tennis court or tennis-inspired visual in the background only.
+
+Include exactly:
+
+CHAMPIONSHIP FINAL
+
+ALEX
+
+VS
+
+DANIEL
+
+Sunday, 18 October 2026
+
+7:30 PM
+
+CENTRE COURT
+
+Use bold sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep the background visually secondary and do not let it obstruct the text.
+
+Do not add any other text.",text_typography,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.926,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_TT-05.png,3147861,2026-09-20T13:01:15.834755+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,BA-01,"Create a product advertisement for a fictional skincare brand called ""LUMI"". Show a single glass serum bottle centered on a baby blue background, with soft shadows and a clean minimal look.",branding_advertising,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.972,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_BA-01.png,3147861,2026-09-20T13:01:32.868656+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,BA-02,"Create a social media advertisement for a fictional sportswear brand called ""VORA"". Show a white sneaker on a dark pedestal with orange accents, dramatic side lighting, and negative space on the left for advertising copy.",branding_advertising,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.99,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_BA-02.png,3147861,2026-09-20T13:01:49.916373+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,BA-03,"Create a promotional advertisement for a fictional coffee brand called ""NOVA"". Show a takeaway coffee cup beside scattered coffee beans on a warm beige surface. Use soft morning lighting, a modern premium style, and include the brand name ""NOVA"" clearly on the cup.",branding_advertising,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.974,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_BA-03.png,3147861,2026-09-20T13:02:06.949414+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,BA-04,"Create a luxury advertising campaign for a fictional skincare brand called ""AURA"". Place one transparent serum bottle in the center on a white stone pedestal, with two smaller cosmetic jars positioned behind it, one on each side. Add white flowers and subtle water reflections around the products. Use soft golden lighting and a beige-and-white color palette. Include the headline ""Reveal Your Glow"" at the top and the brand name ""AURA"" at the bottom. Do not include any additional text.",branding_advertising,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.967,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_BA-04.png,3147861,2026-09-20T13:02:23.974519+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,BA-05,"Create a bold social media campaign for a fictional energy drink brand called ""PULSE"". Show three beverage cans arranged at different heights on metallic platforms: a black can in the center, an orange can on the left, and a silver can on the right. Add splashing water and orange light streaks in the background. Include the headline ""POWER YOUR MOMENT"" at the top and the brand name ""PULSE"" clearly on all three cans. Leave clean negative space in the lower-right corner for additional campaign content.",branding_advertising,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.983,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_BA-05.png,3147861,2026-09-20T13:02:41.015265+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PO-01,"A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style.",products_objects,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.982,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PO-01.png,3147861,2026-09-20T13:02:58.074914+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PO-02,"A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light.",products_objects,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.988,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PO-02.png,3147861,2026-09-20T13:03:15.123757+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PO-03,"A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting.",products_objects,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.985,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PO-03.png,3147861,2026-09-20T13:03:32.168094+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PO-04,"A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting.",products_objects,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.99,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PO-04.png,3147861,2026-09-20T13:03:49.217111+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,PO-05,"A perfume bottle with its box slightly open beside it, floating layout on a bright blue gradient background.",products_objects,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.983,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_PO-05.png,3147861,2026-09-20T13:04:06.260279+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,CC-01,"Create a lifestyle advertising image for a fictional travel brand. Show a young woman sitting at an outdoor café table with an open laptop in front of her, a coffee cup on the right side of the laptop, and a small travel bag beside the chair. In the background, show a busy European street with bicycles and pedestrians. Use warm morning sunlight and a natural, premium travel-campaign style.",complex_compositions,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.991,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_CC-01.png,3147861,2026-09-20T13:04:23.312587+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,CC-02,"Create a premium summer campaign image for a fictional beverage brand called ""SOLAR"". Show three friends having a picnic on a beach at sunset. Place a red cooler on the left, a striped picnic blanket in the center, and three beverage cans on the blanket: one yellow, one orange, and one blue. Add a surfboard standing upright in the sand on the right and a beach umbrella behind the group. The ocean should be visible in the background with soft golden sunlight reflecting on the water. Keep the composition balanced and suitable for a professional social media advertisement.",complex_compositions,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,16.994,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_CC-02.png,3147861,2026-09-20T13:04:40.366162+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,CC-03,"complex futuristic urban lifestyle shot of a sleek modern electric car parked on a wet asphalt city street at night. Bright magenta and cyan neon store signs reflect vividly in the rain puddles on the ground and on the car's metallic surface. Blurred pedestrians with umbrellas walking in the background under soft atmospheric street fog. Intricate reflections, high dynamic range (HDR), dramatic contrast, neon lighting aesthetic, shot on a 35mm lens, f/1.8, cinematic composition, ultra-realistic, highly detailed social media marketing ad style.",complex_compositions,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,17.006,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_CC-03.png,3147861,2026-09-20T13:04:57.431662+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,CC-04,"Create a premium food delivery campaign image showing a wooden dining table set for two in a modern apartment. Place a pizza in the center of the table, two glasses of sparkling water on the right, a bowl of salad on the left, and a smartphone displaying a food delivery app beside the pizza. Show one person reaching for a slice of pizza while another person holds the smartphone. In the background, include a softly lit kitchen with indoor plants and warm pendant lights. Use natural evening lighting, realistic food textures, and a polished lifestyle advertising style.",complex_compositions,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,17.004,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_CC-04.png,3147861,2026-09-20T13:05:14.498616+00:00,42
+5bd590ad-d9a2-4629-8d84-55da79e1e159,official,CC-05,"Create a high-end smart home advertising image set in a modern living room during the evening. Show a family of three relaxing on a sofa, with a large television mounted on the wall in front of them. Place a smart speaker on a side table to the left, a smartphone displaying a home-control interface on the coffee table, and two smart lamps glowing with warm light on opposite sides of the room. Through the large window in the background, show a nighttime city skyline. Keep all devices clearly visible while maintaining a natural, realistic scene with balanced composition, premium lighting, and a professional technology campaign aesthetic.",complex_compositions,flux-klein,black-forest-labs/FLUX.2-klein-4B,1024,1024,17.012,19929,NVIDIA RTX A6000,True,,benchmark/results/baseline/1024/images/flux-klein/5bd590ad_CC-05.png,3147861,2026-09-20T13:05:31.569471+00:00,42
