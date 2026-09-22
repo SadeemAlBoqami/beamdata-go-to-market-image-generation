@@ -56,4 +56,8 @@ def build_dashboard() -> gr.Blocks:
 
 
 if __name__ == "__main__":
-    build_dashboard().launch()
+    build_dashboard().launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        root_path="/proxy/7860",
+    )
