@@ -1,0 +1,7 @@
+Python=3.12.14
+vLLM=0.29.0+cu129
+vLLM-Omni-commit=3d6a1c4d9a0a09d8392bda3a54f8dfb890d5fb05
+PyTorch=2.13.0+cu129
+vllm-gguf-plugin=0.0.5
+bitsandbytes=0.50.2
+CUDA=12.9
