@@ -1,0 +1,5 @@
+model=Tongyi-MAI/Z-Image-Turbo
+runtime=vLLM-Omni
+quantization=none
+resolution=512x512
+run_id=50d2ae71-7b23-4085-9df2-ae9f2a4836d1

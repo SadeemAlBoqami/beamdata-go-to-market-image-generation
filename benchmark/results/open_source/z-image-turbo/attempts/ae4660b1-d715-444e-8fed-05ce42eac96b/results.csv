@@ -1,0 +1,141 @@
+run_id,run_type,prompt_id,prompt,category,provider,model,width,height,generation_time_seconds,peak_vram_mib_observed,gpu_used,success,error,image_path,image_size_bytes,timestamp,seed
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PL-01,"A candid lifestyle photograph of a professional woman in her late 20s sitting in a modern minimalist cafe, casually holding a smartphone while drinking coffee. She is wearing a smart-casual outfit. Natural morning sunlight enters through large windows, with green plants and a softly blurred cafe interior in the background. Warm color palette, realistic photography, professional social media marketing campaign style.",people_lifestyle,z-image-turbo,/models/z-image-turbo,512,512,0.222,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:16.071430+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PL-02,"A candid lifestyle photograph of a diverse group of young adult friends enjoying a relaxed afternoon picnic in a sunny public park. They are sitting together on the grass, talking and laughing naturally, with coffee cups, tote bags, and picnic items nearby. Green trees and warm afternoon sunlight fill the background. Natural skin tones, warm colors, authentic lifestyle marketing photography style.",people_lifestyle,z-image-turbo,/models/z-image-turbo,512,512,0.195,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:16.267294+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PL-03,"A candid lifestyle photograph of an elderly East Asian ceramic artisan carefully hand-painting intricate blue and teal floral patterns onto a ceramic vase inside a pottery workshop. She is wearing glasses and a work apron, with subtle paint marks on her hands. Ceramic bowls and pottery pieces appear softly blurred in the foreground. Warm natural light highlights her focused expression and craftsmanship. Shallow depth of field, rich warm colors, highly detailed, authentic cultural lifestyle campaign photography style.",people_lifestyle,z-image-turbo,/models/z-image-turbo,512,512,0.198,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:16.465917+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PL-04,"A candid, nostalgic lifestyle photograph of a diverse group of young adult friends hanging out, talking, and laughing together in a cozy retro living room inspired by classic 1970s sitcom aesthetics. They are wearing recognizable 1970s-inspired fashion, including flare jeans, patterned knit sweaters, and earth-toned jackets. The room is decorated with a plush velvet sofa, warm patterned wallpaper, a low wooden coffee table with vintage-style soda cans and mugs, and warm ambient indoor lighting. Retro 35mm film aesthetic, soft cinematic film grain, rich tones of orange, brown, and mustard yellow, shallow depth of field, highly detailed, authentic social media lifestyle marketing campaign photography style.",people_lifestyle,z-image-turbo,/models/z-image-turbo,512,512,0.197,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:16.663066+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PL-05,"A candid lifestyle photograph of two AI infrastructure engineers collaborating in a bright modern technology office. A female engineer is sketching an AI system architecture diagram on a transparent glass board while her colleague stands beside her holding a laptop and pointing toward the diagram. Natural sunlight illuminates the workspace, with office greenery and softly blurred server racks in the background. Realistic professional B2B technology marketing photography, natural skin tones, highly detailed.",people_lifestyle,z-image-turbo,/models/z-image-turbo,512,512,0.201,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:16.864188+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,TT-01,"Create a premium minimalist fashion poster.
+
+Use a subtle fashion-inspired background only. The background should support the design without competing with the text.
+
+Include exactly:
+
+NEW SEASON
+
+AUTUMN / WINTER 2026
+
+Modern Form. Timeless Style.
+
+DISCOVER NOW
+
+Use elegant editorial typography with strong hierarchy and generous spacing.
+
+Text and typography must be the main focus.
+
+Do not let background elements overlap or obstruct the text.
+
+Do not add any other text.",text_typography,z-image-turbo,/models/z-image-turbo,512,512,0.201,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:17.065451+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,TT-02,"Create a premium advertisement for a fictional running shoe brand.
+
+Use a subtle running-shoe or sports-inspired visual as a background element only.
+
+Include exactly:
+
+VELOCITY
+
+V1 PERFORMANCE
+
+Built for Speed.
+
+Weight: 245 g
+Drop: 8 mm
+
+699 SAR
+
+SHOP NOW
+
+Use bold modern sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep background imagery secondary and unobtrusive.
+
+Do not add any other text.",text_typography,z-image-turbo,/models/z-image-turbo,512,512,0.201,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:17.266792+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,TT-03,"Create a clean modern technology dashboard.
+
+Use subtle abstract technology graphics in the background only.
+
+Include exactly:
+
+SYSTEM STATUS
+
+GPU-A100-04
+
+Usage: 87%
+Latency: 42.8 ms
+Uptime: 99.99%
+Version: v2.4.1
+
+ONLINE
+
+Use clean technical typography with consistent spacing and alignment.
+
+Text and typography must be the main focus.
+
+Keep every character and value exactly as written.
+
+Do not let background graphics interfere with readability.
+
+Do not add any other text.",text_typography,z-image-turbo,/models/z-image-turbo,512,512,0.199,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:17.466214+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,TT-04,"Create a modern technology conference poster.
+
+Use subtle AI or technology imagery in the background only.
+
+Include exactly:
+
+AI SUMMIT 2026
+
+Build. Scale. Operate.
+
+22 October 2026
+
+09:00 — Cloud
+11:00 — AI Infrastructure
+14:00 — Data
+16:00 — Closing
+
+REGISTER NOW
+
+Use clear typography hierarchy and consistent alignment.
+
+Text and typography must be the main focus.
+
+Background imagery should remain secondary and must not overlap the text.
+
+Do not add any other text.",text_typography,z-image-turbo,/models/z-image-turbo,512,512,0.2,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:17.666158+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,TT-05,"Create a premium professional tennis match poster.
+
+Use a subtle tennis court or tennis-inspired visual in the background only.
+
+Include exactly:
+
+CHAMPIONSHIP FINAL
+
+ALEX
+
+VS
+
+DANIEL
+
+Sunday, 18 October 2026
+
+7:30 PM
+
+CENTRE COURT
+
+Use bold sports typography with clear hierarchy.
+
+Text and typography must be the main focus.
+
+Keep the background visually secondary and do not let it obstruct the text.
+
+Do not add any other text.",text_typography,z-image-turbo,/models/z-image-turbo,512,512,0.2,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:17.866823+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,BA-01,"Create a product advertisement for a fictional skincare brand called ""LUMI"". Show a single glass serum bottle centered on a baby blue background, with soft shadows and a clean minimal look.",branding_advertising,z-image-turbo,/models/z-image-turbo,512,512,0.2,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:18.067069+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,BA-02,"Create a social media advertisement for a fictional sportswear brand called ""VORA"". Show a white sneaker on a dark pedestal with orange accents, dramatic side lighting, and negative space on the left for advertising copy.",branding_advertising,z-image-turbo,/models/z-image-turbo,512,512,0.197,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:18.264048+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,BA-03,"Create a promotional advertisement for a fictional coffee brand called ""NOVA"". Show a takeaway coffee cup beside scattered coffee beans on a warm beige surface. Use soft morning lighting, a modern premium style, and include the brand name ""NOVA"" clearly on the cup.",branding_advertising,z-image-turbo,/models/z-image-turbo,512,512,0.195,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:18.458941+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,BA-04,"Create a luxury advertising campaign for a fictional skincare brand called ""AURA"". Place one transparent serum bottle in the center on a white stone pedestal, with two smaller cosmetic jars positioned behind it, one on each side. Add white flowers and subtle water reflections around the products. Use soft golden lighting and a beige-and-white color palette. Include the headline ""Reveal Your Glow"" at the top and the brand name ""AURA"" at the bottom. Do not include any additional text.",branding_advertising,z-image-turbo,/models/z-image-turbo,512,512,0.198,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:18.657330+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,BA-05,"Create a bold social media campaign for a fictional energy drink brand called ""PULSE"". Show three beverage cans arranged at different heights on metallic platforms: a black can in the center, an orange can on the left, and a silver can on the right. Add splashing water and orange light streaks in the background. Include the headline ""POWER YOUR MOMENT"" at the top and the brand name ""PULSE"" clearly on all three cans. Leave clean negative space in the lower-right corner for additional campaign content.",branding_advertising,z-image-turbo,/models/z-image-turbo,512,512,0.203,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:18.860297+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PO-01,"A luxury perfume bottle with a square glass silhouette and gold cap, photographed on a plain grey studio background with soft shadows, product photography style.",products_objects,z-image-turbo,/models/z-image-turbo,512,512,0.198,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:19.058841+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PO-02,"A round crystal perfume bottle with an amber-colored liquid, photographed on a marble countertop with soft natural light.",products_objects,z-image-turbo,/models/z-image-turbo,512,512,17.684,21621,NVIDIA RTX A6000,True,,benchmark/results/baseline/512/images/z-image-turbo/ae4660b1_PO-02.png,787271,2026-09-20T16:12:36.791939+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PO-03,"A trio of perfume bottles of different sizes arranged next to a small green plant and a few scattered rose petals, soft natural lighting.",products_objects,z-image-turbo,/models/z-image-turbo,512,512,0.211,,NVIDIA RTX A6000,False,500 Server Error: Internal Server Error for url: http://localhost:8003/v1/images/generations,,,2026-09-20T16:12:37.003263+00:00,42
+ae4660b1-d715-444e-8fed-05ce42eac96b,official,PO-04,"A tall slender perfume bottle standing on a wooden surface, photographed from a slight low angle, warm dramatic side lighting.",products_objects,z-image-turbo,/models/z-image-turbo,512,512,17.727,21621,NVIDIA RTX A6000,True,,benchmark/results/baseline/512/images/z-image-turbo/ae4660b1_PO-04.png,787271,2026-09-20T16:12:54.775763+00:00,42
