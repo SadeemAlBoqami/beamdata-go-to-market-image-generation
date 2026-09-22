@@ -1,0 +1,5 @@
+model=Qwen/Qwen-Image-2.1
+runtime=vLLM-Omni
+resolution=512x512
+run_id=680552f8-a0b6-42a0-99c5-759dab8f598d
+note=Serving succeeded, but VRAM usage was high compared with the ~16GB target.
