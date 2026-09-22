@@ -35,19 +35,22 @@ RUN /root/.local/bin/uv pip install \
     --python /opt/venv/bin/python \
     "bitsandbytes==0.50.2"
 
-# Fail the Docker build immediately if versions drift
-RUN /opt/venv/bin/python - <<'PY'
-import torch
-import vllm
-import bitsandbytes
+# Verify installed package versions without importing GPU runtimes
+RUN /opt/venv/bin/python - <<'PYVERIFY'
+from importlib.metadata import version
 
-print("torch:", torch.__version__)
-print("vllm:", vllm.__version__)
-print("bitsandbytes:", bitsandbytes.__version__)
+packages = {
+    "vllm": "0.29.0+cu129",
+    "bitsandbytes": "0.50.2",
+}
 
-assert vllm.__version__ == "0.29.0+cu129"
-assert bitsandbytes.__version__ == "0.50.2"
-PY
+for package, expected in packages.items():
+    actual = version(package)
+    print(f"{package}: {actual}")
+    assert actual == expected, f"{package}: expected {expected}, got {actual}"
+
+print("Package version verification passed.")
+PYVERIFY
 
 WORKDIR /app
 
