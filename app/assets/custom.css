@@ -89,3 +89,9 @@ body, .gradio-container {
   .hero, .dashboard-section { padding: 20px !important; }
   .results-grid, .evaluation-grid { flex-direction: column !important; }
 }
+
+.control-label { margin: 10px 0 4px; font-size: .84rem; font-weight: 600; }
+.model-controls { gap: 10px !important; }
+.active-models { padding: 8px 12px; border-radius: 8px; background: #eef2ff; color: #3730a3; }
+.status-pill.success { color: #067647; background: #dff7e9; }
+.status-pill.failure { color: #b42318; background: #feeceb; }

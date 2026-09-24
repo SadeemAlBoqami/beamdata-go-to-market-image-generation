@@ -13,6 +13,7 @@ import requests
 FLUX_ENDPOINT = os.environ.get(
     "FLUX_ENDPOINT", "http://127.0.0.1:8005/v1/images/generations"
 )
+FLUX_TOKEN = os.environ.get("FLUX_TOKEN")
 FLUX_MODEL = "black-forest-labs/FLUX.2-klein-4B"
 REQUEST_TIMEOUT_SECONDS = 300
 
@@ -28,46 +29,36 @@ class FluxGenerationResult:
     error: str | None
 
 
-def generate_flux(prompt: str) -> FluxGenerationResult:
+def generate_flux(prompt: str, size: str = "1024x1024") -> FluxGenerationResult:
     """Request a FLUX image without loading a model in the Gradio process."""
     started_at = time.perf_counter()
     payload = {
         "model": FLUX_MODEL,
         "prompt": prompt,
-        "size": "1024x1024",
+        "size": size,
         "response_format": "b64_json",
     }
 
     try:
-        response = requests.post(FLUX_ENDPOINT, json=payload, timeout=REQUEST_TIMEOUT_SECONDS)
+        headers = {"Authorization": f"Bearer {FLUX_TOKEN}"} if FLUX_TOKEN else None
+        response = requests.post(
+            FLUX_ENDPOINT, json=payload, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS
+        )
         if response.status_code != 200:
-            response_body = response.text.strip().replace("\n", " ")
-            detail = f": {response_body[:300]}" if response_body else ""
-            raise requests.HTTPError(f"FLUX endpoint returned HTTP {response.status_code}{detail}")
+            if response.status_code in (401, 403):
+                raise requests.HTTPError("Authentication failed. Check FLUX_TOKEN.")
+            raise requests.HTTPError(f"Backend returned HTTP {response.status_code}.")
 
         encoded_image = response.json()["data"][0]["b64_json"]
         image = Image.open(BytesIO(base64.b64decode(encoded_image))).copy()
+    except requests.Timeout:
+        error_message = "The FLUX backend timed out. Please try again."
+    except requests.ConnectionError:
+        error_message = "The FLUX backend is unavailable. Check its endpoint."
     except requests.RequestException as error:
-        return FluxGenerationResult(
-            image=None,
-            generation_time=time.perf_counter() - started_at,
-            peak_vram=None,
-            success=False,
-            error=f"FLUX request failed: {error}",
-        )
-    except (KeyError, IndexError, TypeError, ValueError, OSError) as error:
-        return FluxGenerationResult(
-            image=None,
-            generation_time=time.perf_counter() - started_at,
-            peak_vram=None,
-            success=False,
-            error=f"FLUX returned an invalid image response: {error}",
-        )
-
-    return FluxGenerationResult(
-        image=image,
-        generation_time=time.perf_counter() - started_at,
-        peak_vram=None,
-        success=True,
-        error=None,
-    )
+        error_message = str(error) if isinstance(error, requests.HTTPError) else "FLUX request failed."
+    except (KeyError, IndexError, TypeError, ValueError, OSError):
+        error_message = "FLUX returned an invalid image response."
+    else:
+        return FluxGenerationResult(image, time.perf_counter() - started_at, None, True, None)
+    return FluxGenerationResult(None, time.perf_counter() - started_at, None, False, error_message)
