@@ -98,6 +98,22 @@ body, .gradio-container {
 
 .results-grid { flex-wrap: wrap !important; }
 .results-grid .result-card { flex: 1 1 340px !important; }
+.result-card .instant-loading { display: none !important; }
+.result-card.client-generating .instant-loading { display: block !important; }
+.result-card.client-generating .result-image,
+.result-card.client-generating .server-loading { display: none !important; }
+.result-card.client-generating .generation-status .status-pill { display: none; }
+.result-card.client-generating .generation-status::after {
+  content: "Generating...";
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #7c5200;
+  background: #fff3d4;
+  font-size: .79rem;
+  font-weight: 600;
+}
 .image-loading {
   min-height: 250px;
   display: flex;

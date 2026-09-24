@@ -87,18 +87,23 @@ class ResultCardUI:
 
 
 def _result_card(model_name: str) -> ResultCardUI:
-    with gr.Column(elem_classes=["result-card"]):
+    card_id = "flux-result-card" if model_name == "FLUX" else "zimage-result-card"
+    with gr.Column(elem_id=card_id, elem_classes=["result-card"]):
         gr.HTML(f"<h3>{model_name}</h3>")
+        gr.HTML(_LOADING_HTML, elem_classes=["instant-loading"])
         image = gr.Image(
             label=f"{model_name} output", value=None, interactive=False,
             height=250, elem_classes=["result-image"],
         )
-        loading = gr.HTML(_LOADING_HTML, visible=False)
+        loading = gr.HTML(_LOADING_HTML, visible=False, elem_classes=["server-loading"])
         model = gr.Textbox(label="Model", value=model_name, interactive=False)
         with gr.Row(elem_classes=["metadata-row"]):
             generation_time = gr.Textbox(label="Generation time", value="—", interactive=False)
             resolution = gr.Textbox(label="Resolution", value="—", interactive=False)
-        status = gr.Markdown("<span class='status-pill neutral'>Ready</span>")
+        status = gr.Markdown(
+            "<span class='status-pill neutral'>Ready</span>",
+            elem_classes=["generation-status"],
+        )
         with gr.Accordion("Technical details", open=False):
             peak_vram = gr.Textbox(label="Peak VRAM", value="—", interactive=False)
         download = gr.DownloadButton("Download image", value=None, interactive=False)
@@ -348,12 +353,37 @@ def build_generation_section() -> None:
     prepare = generate_button.click(
         _start_generation, inputs=inputs, outputs=outputs,
         queue=False, show_progress="hidden", trigger_mode="once",
-        js="""(prompt, flux, zimage, aspect) => {
+        js="""async (prompt, flux, zimage, aspect) => {
             const root = document.getElementById("generate-button");
             const button = root?.matches("button") ? root : root?.querySelector("button");
             if (button) {
                 button.disabled = true;
                 button.textContent = "Generating...";
+            }
+            if (prompt?.trim() && aspect === "Square" && (flux || zimage)) {
+                for (const [id, selected] of [
+                    ["flux-result-card", flux], ["zimage-result-card", zimage]
+                ]) {
+                    if (!selected) continue;
+                    const card = document.getElementById(id);
+                    if (!card) continue;
+                    const status = () => card.querySelector(".generation-status .status-pill")?.textContent;
+                    const previousStatus = status();
+                    const observer = new MutationObserver(() => {
+                        if (status() && status() !== previousStatus) {
+                            observer.disconnect();
+                            requestAnimationFrame(() => requestAnimationFrame(() => {
+                                card.classList.remove("client-generating");
+                            }));
+                        }
+                    });
+                    observer.observe(card, {childList: true, characterData: true, subtree: true});
+                    card.classList.add("client-generating");
+                }
+                await new Promise((resolve) => {
+                    requestAnimationFrame(() => requestAnimationFrame(resolve));
+                    setTimeout(resolve, 120);
+                });
             }
             return [prompt, flux, zimage, aspect];
         }""",
