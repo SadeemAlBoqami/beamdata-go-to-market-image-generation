@@ -36,6 +36,18 @@ ASPECT_SIZES = {
     },
 }
 MODELS = ("FLUX", "Z-Image Turbo")
+_LOADING_HTML = (
+    "<div class='image-loading' role='status' aria-live='polite'>"
+    "<span class='image-loading-spinner' aria-hidden='true'></span>"
+    "<strong>Generating image...</strong>"
+    "<span class='image-loading-copy'>This may take a moment.</span></div>"
+)
+_ERROR_HTML = (
+    "<div class='image-loading image-error' role='status'>"
+    "<span class='image-error-icon' aria-hidden='true'>!</span>"
+    "<strong>Generation failed</strong>"
+    "<span class='image-loading-copy'>See the status below for details.</span></div>"
+)
 _DOWNLOAD_DIR = tempfile.TemporaryDirectory(prefix="beamdata-images-")
 
 
@@ -64,12 +76,7 @@ def _result_card(model_name: str) -> ResultCardUI:
             label=f"{model_name} output", value=None, interactive=False,
             height=250, elem_classes=["result-image"],
         )
-        loading = gr.HTML(
-            "<div class='image-loading' role='status' aria-live='polite'>"
-            "<span class='image-loading-spinner' aria-hidden='true'></span>"
-            "<span>Generating image...</span></div>",
-            visible=False,
-        )
+        loading = gr.HTML(_LOADING_HTML, visible=False)
         model = gr.Textbox(label="Model", value=model_name, interactive=False)
         with gr.Row(elem_classes=["metadata-row"]):
             generation_time = gr.Textbox(label="Generation time", value="—", interactive=False)
@@ -90,11 +97,11 @@ def _status(label: str, status_class: str = "neutral") -> str:
 def _card_values(
     model_name: str, image=None, generation_time: str = "—", resolution: str = "—",
     status: str = "Ready", status_class: str = "neutral", peak_vram: str = "—",
-    download_path: str | None = None, loading: bool = False,
+    download_path: str | None = None, loading: bool = False, error: bool = False,
 ) -> list:
     return [
-        gr.update(value=image, visible=not loading),
-        gr.update(visible=loading),
+        gr.update(value=image, visible=not (loading or error)),
+        gr.update(value=_ERROR_HTML if error else _LOADING_HTML, visible=loading or error),
         model_name, generation_time, resolution, _status(status, status_class),
         peak_vram, gr.update(value=download_path, interactive=download_path is not None),
     ]
@@ -153,10 +160,37 @@ def _finished_values(model_name: str, result) -> tuple[list, str]:
     return (
         _card_values(
             model_name, status=f"Generation failed: {error or 'Backend unavailable.'}",
-            status_class="failure",
+            status_class="failure", error=True,
         ),
         f"Generation failed for {model_name}. See its card for details.",
     )
+
+
+def _start_generation(
+    prompt: str, flux_selected: bool, zimage_selected: bool, aspect_ratio: str,
+) -> list:
+    """Show card-local loaders before the queued backend event begins."""
+    selected = {"FLUX": bool(flux_selected), "Z-Image Turbo": bool(zimage_selected)}
+    if not prompt or not prompt.strip():
+        return ["Enter a prompt to generate images.", *(_skip_card() * 2)]
+    if not any(selected.values()):
+        return ["Select FLUX or Z-Image Turbo to generate an image.", *(_skip_card() * 2)]
+    if aspect_ratio != "Square":
+        cards = [
+            _skip_card("Aspect ratio not yet validated") if selected[name] else _skip_card()
+            for name in MODELS
+        ]
+        return [
+            "Only Square is validated for this deployment. Select Square to generate.",
+            *(value for card in cards for value in card),
+        ]
+
+    cards = [
+        _card_values(name, status="Generating...", status_class="pending", loading=True)
+        if selected[name] else _skip_card("Not selected")
+        for name in MODELS
+    ]
+    return ["Generating selected images...", *(value for card in cards for value in card)]
 
 
 def _generate_selected(
@@ -188,25 +222,11 @@ def _generate_selected(
         )
         return
 
-    loading = {
-        name: _card_values(name, status="Loading model...", status_class="pending", loading=True)
-        if name in selected else _skip_card("Not selected")
-        for name in MODELS
-    }
-    yield output("Loading selected model services...", loading)
-
     with ThreadPoolExecutor(max_workers=len(selected)) as executor:
         futures = {
             executor.submit(service, prompt.strip(), size=ASPECT_SIZES[name][aspect_ratio]): name
             for name, service in selected.items()
         }
-        generating = {
-            name: _card_values(name, status="Generating...", status_class="pending", loading=True)
-            if name in selected else _skip_card()
-            for name in MODELS
-        }
-        yield output("Generating selected images...", generating)
-
         for future in as_completed(futures):
             name = futures[future]
             try:
@@ -243,7 +263,12 @@ def build_generation_section() -> None:
     with gr.Row(equal_height=True, elem_classes=["results-grid"]):
         cards = [_result_card(name) for name in MODELS]
     outputs = [status, *(component for card in cards for component in card.outputs())]
-    generate_button.click(
-        _generate_selected, inputs=[prompt, flux, zimage, aspect_ratio], outputs=outputs,
+    inputs = [prompt, flux, zimage, aspect_ratio]
+    prepare = generate_button.click(
+        _start_generation, inputs=inputs, outputs=outputs,
+        queue=False, show_progress="hidden",
+    )
+    prepare.then(
+        _generate_selected, inputs=inputs, outputs=outputs,
         show_progress="hidden",
     )
