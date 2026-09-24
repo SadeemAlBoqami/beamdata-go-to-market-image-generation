@@ -1,0 +1,7 @@
+]633;E;echo "Model: Tongyi-MAI/Z-Image-Turbo";a41107c5-8ae8-479f-93d5-8a84179095bf]633;CModel: Tongyi-MAI/Z-Image-Turbo
+Runtime: vLLM-Omni
+Quantization: BitsAndBytes W4
+Resolution: 512x512
+vLLM-Omni commit: 3d6a1c4d9a0a09d8392bda3a54f8dfb890d5fb05
+
+NVIDIA RTX A6000, 550.90.12, 49140 MiB
