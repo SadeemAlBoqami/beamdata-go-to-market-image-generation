@@ -22,8 +22,7 @@ except ImportError:  # pragma: no cover
     from services.zimage_service import generate_zimage
 
 
-# Only square generation is validated for the current deployment. Keep the
-# other mappings visible for the demo, but block calls until live validation.
+# Output dimensions validated against the deployed image APIs.
 ASPECT_SIZES = {
     "FLUX": {
         "Square": "1024x1024",
@@ -223,17 +222,6 @@ def _start_generation(
         if not any(selected.values()):
             return ["Select FLUX or Z-Image Turbo to generate an image.", *skipped,
                     gr.update(value="Generate", interactive=True)]
-        if aspect_ratio != "Square":
-            cards = [
-                _skip_card("Aspect ratio not yet validated") if selected[name] else _skip_card()
-                for name in MODELS
-            ]
-            return [
-                "Only Square is validated for this deployment. Select Square to generate.",
-                *(value for card in cards for value in card),
-                gr.update(value="Generate", interactive=True),
-            ]
-
         _ACTIVE_RUNS[session] = ActiveRun(
             id=uuid4().hex, prompt=prompt.strip(),
             flux_selected=bool(flux_selected), zimage_selected=bool(zimage_selected),
@@ -338,7 +326,6 @@ def build_generation_section() -> None:
     zimage.change(_active_status, inputs=[flux, zimage], outputs=active)
     aspect_ratio = gr.Dropdown(
         choices=list(ASPECT_SIZES["FLUX"]), value="Square", label="Aspect ratio",
-        info="Only Square is enabled until the deployed backends pass live size checks.",
     )
     generate_button = gr.Button(
         "Generate", variant="primary", elem_id="generate-button",
