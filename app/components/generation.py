@@ -6,6 +6,7 @@ from html import escape
 import os
 from pathlib import Path
 import tempfile
+from threading import Lock
 from typing import Iterator
 from uuid import uuid4
 
@@ -13,9 +14,11 @@ import gradio as gr
 
 try:  # Supports both documented module execution and direct script execution.
     from ..services.flux_service import generate_flux
+    from ..services.health_service import check_backend_ready
     from ..services.zimage_service import generate_zimage
 except ImportError:  # pragma: no cover
     from services.flux_service import generate_flux
+    from services.health_service import check_backend_ready
     from services.zimage_service import generate_zimage
 
 
@@ -49,6 +52,20 @@ _ERROR_HTML = (
     "<span class='image-loading-copy'>See the status below for details.</span></div>"
 )
 _DOWNLOAD_DIR = tempfile.TemporaryDirectory(prefix="beamdata-images-")
+_RUN_LOCK = Lock()
+
+
+@dataclass
+class ActiveRun:
+    id: str
+    prompt: str
+    flux_selected: bool
+    zimage_selected: bool
+    aspect_ratio: str
+    started: bool = False
+
+
+_ACTIVE_RUNS: dict[str, ActiveRun] = {}
 
 
 @dataclass
@@ -136,8 +153,15 @@ def _save_for_download(image, model_name: str) -> str:
     return str(path)
 
 
-def _finished_values(model_name: str, result) -> tuple[list, str]:
-    if result.success and result.image is not None:
+def _finished_values(
+    model_name: str, result, readiness_error: str | None = None,
+) -> tuple[list, str]:
+    if readiness_error:
+        return (
+            _card_values(model_name, status=readiness_error, status_class="failure", error=True),
+            f"{model_name}: {readiness_error}.",
+        )
+    if result is not None and result.success and result.image is not None:
         try:
             download_path = _save_for_download(result.image, model_name)
         except OSError:
@@ -166,76 +190,130 @@ def _finished_values(model_name: str, result) -> tuple[list, str]:
     )
 
 
+def _session_key(request: gr.Request | None) -> str:
+    return request.session_hash if request and request.session_hash else "local-session"
+
+
+def _run_is_current(session: str, run_id: str) -> bool:
+    with _RUN_LOCK:
+        run = _ACTIVE_RUNS.get(session)
+        return run is not None and run.id == run_id
+
+
 def _start_generation(
     prompt: str, flux_selected: bool, zimage_selected: bool, aspect_ratio: str,
+    request: gr.Request | None = None,
 ) -> list:
-    """Show card-local loaders before the queued backend event begins."""
-    selected = {"FLUX": bool(flux_selected), "Z-Image Turbo": bool(zimage_selected)}
-    if not prompt or not prompt.strip():
-        return ["Enter a prompt to generate images.", *(_skip_card() * 2)]
-    if not any(selected.values()):
-        return ["Select FLUX or Z-Image Turbo to generate an image.", *(_skip_card() * 2)]
-    if aspect_ratio != "Square":
-        cards = [
-            _skip_card("Aspect ratio not yet validated") if selected[name] else _skip_card()
-            for name in MODELS
-        ]
-        return [
-            "Only Square is validated for this deployment. Select Square to generate.",
-            *(value for card in cards for value in card),
-        ]
+    """Atomically reserve one run and show card loaders before any backend call."""
+    session = _session_key(request)
+    skipped = [value for _ in MODELS for value in _skip_card()]
+    with _RUN_LOCK:
+        if session in _ACTIVE_RUNS:
+            return [gr.skip(), *skipped, gr.update(value="Generating...", interactive=False)]
+
+        selected = {"FLUX": bool(flux_selected), "Z-Image Turbo": bool(zimage_selected)}
+        if not prompt or not prompt.strip():
+            return ["Enter a prompt to generate images.", *skipped,
+                    gr.update(value="Generate", interactive=True)]
+        if not any(selected.values()):
+            return ["Select FLUX or Z-Image Turbo to generate an image.", *skipped,
+                    gr.update(value="Generate", interactive=True)]
+        if aspect_ratio != "Square":
+            cards = [
+                _skip_card("Aspect ratio not yet validated") if selected[name] else _skip_card()
+                for name in MODELS
+            ]
+            return [
+                "Only Square is validated for this deployment. Select Square to generate.",
+                *(value for card in cards for value in card),
+                gr.update(value="Generate", interactive=True),
+            ]
+
+        _ACTIVE_RUNS[session] = ActiveRun(
+            id=uuid4().hex, prompt=prompt.strip(),
+            flux_selected=bool(flux_selected), zimage_selected=bool(zimage_selected),
+            aspect_ratio=aspect_ratio,
+        )
 
     cards = [
         _card_values(name, status="Generating...", status_class="pending", loading=True)
         if selected[name] else _skip_card("Not selected")
         for name in MODELS
     ]
-    return ["Generating selected images...", *(value for card in cards for value in card)]
+    return [
+        "Generating selected images...", *(value for card in cards for value in card),
+        gr.update(value="Generating...", interactive=False),
+    ]
 
 
-def _generate_selected(
-    prompt: str, flux_selected: bool, zimage_selected: bool, aspect_ratio: str,
-) -> Iterator[list]:
-    """Stream card-local states and independent results for selected services."""
+def _run_model(name: str, service, prompt: str, size: str):
+    readiness_error = check_backend_ready(name)
+    if readiness_error:
+        return None, readiness_error
+    return service(prompt, size=size), None
+
+
+def _generate_selected(request: gr.Request | None = None) -> Iterator[list]:
+    """Run each selected backend once and restore the button after all finish."""
+    session = _session_key(request)
+    with _RUN_LOCK:
+        run = _ACTIVE_RUNS.get(session)
+        if run is None or run.started:
+            return
+        run.started = True
+        run_id = run.id
+
     selected = {
         name: service for name, enabled, service in (
-            ("FLUX", flux_selected, generate_flux),
-            ("Z-Image Turbo", zimage_selected, generate_zimage),
+            ("FLUX", run.flux_selected, generate_flux),
+            ("Z-Image Turbo", run.zimage_selected, generate_zimage),
         ) if enabled
     }
 
-    def output(message: str, updates: dict[str, list]) -> list:
-        return [message, *(value for name in MODELS for value in updates[name])]
+    def output(message: str, name: str, card: list, button=gr.skip()) -> list:
+        updates = {model: card if model == name else _skip_card() for model in MODELS}
+        return [message, *(value for model in MODELS for value in updates[model]), button]
 
-    skipped = {name: _skip_card() for name in MODELS}
-    if not prompt or not prompt.strip():
-        yield output("Enter a prompt to generate images.", skipped)
-        return
-    if not selected:
-        yield output("Select FLUX or Z-Image Turbo to generate an image.", skipped)
-        return
-    if aspect_ratio != "Square":
-        yield output(
-            "Only Square is validated for this deployment. Select Square to generate.",
-            {name: _skip_card("Aspect ratio not yet validated") if name in selected else _skip_card()
-             for name in MODELS},
-        )
-        return
+    try:
+        with ThreadPoolExecutor(max_workers=len(selected)) as executor:
+            futures = {
+                executor.submit(
+                    _run_model, name, service, run.prompt,
+                    ASPECT_SIZES[name][run.aspect_ratio],
+                ): name
+                for name, service in selected.items()
+            }
+            remaining = len(futures)
+            for future in as_completed(futures):
+                name = futures[future]
+                try:
+                    result, readiness_error = future.result()
+                except Exception:
+                    result, readiness_error = None, "Backend unavailable"
+                if not _run_is_current(session, run_id):
+                    return
 
-    with ThreadPoolExecutor(max_workers=len(selected)) as executor:
-        futures = {
-            executor.submit(service, prompt.strip(), size=ASPECT_SIZES[name][aspect_ratio]): name
-            for name, service in selected.items()
-        }
-        for future in as_completed(futures):
-            name = futures[future]
-            try:
-                result = future.result()
-            except Exception:
-                result = None
-            card, message = _finished_values(name, result)
-            updates = {model: card if model == name else _skip_card() for model in MODELS}
-            yield output(message, updates)
+                card, message = _finished_values(name, result, readiness_error)
+                remaining -= 1
+                if remaining == 0:
+                    with _RUN_LOCK:
+                        if _ACTIVE_RUNS.get(session) is run:
+                            del _ACTIVE_RUNS[session]
+                    button = gr.update(value="Generate", interactive=True)
+                else:
+                    button = gr.skip()
+                yield output(message, name, card, button)
+    except Exception:
+        if _run_is_current(session, run_id):
+            yield [
+                "Generation failed. Please try again.",
+                *(value for _ in MODELS for value in _skip_card()),
+                gr.update(value="Generate", interactive=True),
+            ]
+    finally:
+        with _RUN_LOCK:
+            if _ACTIVE_RUNS.get(session) is run:
+                del _ACTIVE_RUNS[session]
 
 
 def build_generation_section() -> None:
@@ -257,18 +335,30 @@ def build_generation_section() -> None:
         choices=list(ASPECT_SIZES["FLUX"]), value="Square", label="Aspect ratio",
         info="Only Square is enabled until the deployed backends pass live size checks.",
     )
-    generate_button = gr.Button("Generate images", variant="primary", elem_classes=["generate-button"])
+    generate_button = gr.Button(
+        "Generate", variant="primary", elem_id="generate-button",
+        elem_classes=["generate-button"],
+    )
     status = gr.Markdown("<span class='status-note'>Choose a prompt and generate with the active models.</span>")
 
     with gr.Row(equal_height=True, elem_classes=["results-grid"]):
         cards = [_result_card(name) for name in MODELS]
-    outputs = [status, *(component for card in cards for component in card.outputs())]
+    outputs = [status, *(component for card in cards for component in card.outputs()), generate_button]
     inputs = [prompt, flux, zimage, aspect_ratio]
     prepare = generate_button.click(
         _start_generation, inputs=inputs, outputs=outputs,
-        queue=False, show_progress="hidden",
+        queue=False, show_progress="hidden", trigger_mode="once",
+        js="""(prompt, flux, zimage, aspect) => {
+            const root = document.getElementById("generate-button");
+            const button = root?.matches("button") ? root : root?.querySelector("button");
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Generating...";
+            }
+            return [prompt, flux, zimage, aspect];
+        }""",
     )
     prepare.then(
-        _generate_selected, inputs=inputs, outputs=outputs,
-        show_progress="hidden",
+        _generate_selected, outputs=outputs, show_progress="hidden",
+        trigger_mode="once",
     )
