@@ -95,3 +95,45 @@ body, .gradio-container {
 .active-models { padding: 8px 12px; border-radius: 8px; background: #eef2ff; color: #3730a3; }
 .status-pill.success { color: #067647; background: #dff7e9; }
 .status-pill.failure { color: #b42318; background: #feeceb; }
+
+.results-grid { flex-wrap: wrap !important; }
+.results-grid .result-card { flex: 1 1 340px !important; }
+.image-loading {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 4px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: #f8f9fc;
+  color: var(--muted);
+  font-size: .86rem;
+}
+.image-loading-spinner {
+  width: 17px;
+  height: 17px;
+  border: 2px solid #c7d2fe;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: image-loading-spin .8s linear infinite;
+}
+@keyframes image-loading-spin { to { transform: rotate(360deg); } }
+.qwen-note {
+  display: inline-block;
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: #475467;
+  font-size: .78rem;
+  font-weight: 600;
+}
+@media (max-width: 850px) {
+  .results-grid { flex-direction: column !important; }
+  .results-grid .result-card { width: 100% !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .image-loading-spinner { animation: none; }
+}

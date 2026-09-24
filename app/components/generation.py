@@ -1,5 +1,6 @@
 """Generation controls and side-by-side model results."""
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from html import escape
 import os
@@ -18,8 +19,8 @@ except ImportError:  # pragma: no cover
     from services.zimage_service import generate_zimage
 
 
-# The deployed benchmarks validate 512x512. Other shapes use multiples of 16
-# and may depend on the deployed backend's supported image-size settings.
+# Only square generation is validated for the current deployment. Keep the
+# other mappings visible for the demo, but block calls until live validation.
 ASPECT_SIZES = {
     "FLUX": {
         "Square": "1024x1024",
@@ -34,12 +35,14 @@ ASPECT_SIZES = {
         "Landscape": "512x384",
     },
 }
+MODELS = ("FLUX", "Z-Image Turbo")
 _DOWNLOAD_DIR = tempfile.TemporaryDirectory(prefix="beamdata-images-")
 
 
 @dataclass
 class ResultCardUI:
     image: gr.Image
+    loading: gr.HTML
     model: gr.Textbox
     generation_time: gr.Textbox
     resolution: gr.Textbox
@@ -49,41 +52,59 @@ class ResultCardUI:
 
     def outputs(self) -> list:
         return [
-            self.image, self.model, self.generation_time, self.resolution,
-            self.status, self.peak_vram, self.download,
+            self.image, self.loading, self.model, self.generation_time,
+            self.resolution, self.status, self.peak_vram, self.download,
         ]
 
 
-def _result_card(model_name: str, heading: str) -> ResultCardUI:
+def _result_card(model_name: str) -> ResultCardUI:
     with gr.Column(elem_classes=["result-card"]):
-        gr.HTML(f"<h3>{heading}</h3>")
+        gr.HTML(f"<h3>{model_name}</h3>")
         image = gr.Image(
             label=f"{model_name} output", value=None, interactive=False,
             height=250, elem_classes=["result-image"],
+        )
+        loading = gr.HTML(
+            "<div class='image-loading' role='status' aria-live='polite'>"
+            "<span class='image-loading-spinner' aria-hidden='true'></span>"
+            "<span>Generating image...</span></div>",
+            visible=False,
         )
         model = gr.Textbox(label="Model", value=model_name, interactive=False)
         with gr.Row(elem_classes=["metadata-row"]):
             generation_time = gr.Textbox(label="Generation time", value="—", interactive=False)
             resolution = gr.Textbox(label="Resolution", value="—", interactive=False)
-        initial_status = ("Not available in current deployment" if model_name == "Qwen Image"
-                          else "Not generated")
-        status = gr.Markdown(f"<span class='status-pill neutral'>{initial_status}</span>")
+        status = gr.Markdown("<span class='status-pill neutral'>Ready</span>")
         with gr.Accordion("Technical details", open=False):
             peak_vram = gr.Textbox(label="Peak VRAM", value="—", interactive=False)
         download = gr.DownloadButton("Download image", value=None, interactive=False)
-    return ResultCardUI(image, model, generation_time, resolution, status, peak_vram, download)
+    return ResultCardUI(
+        image, loading, model, generation_time, resolution, status, peak_vram, download
+    )
+
+
+def _status(label: str, status_class: str = "neutral") -> str:
+    return f"<span class='status-pill {status_class}'>{escape(label)}</span>"
 
 
 def _card_values(
     model_name: str, image=None, generation_time: str = "—", resolution: str = "—",
-    status: str = "Not generated", status_class: str = "neutral",
-    peak_vram: str = "—", download_path: str | None = None,
+    status: str = "Ready", status_class: str = "neutral", peak_vram: str = "—",
+    download_path: str | None = None, loading: bool = False,
 ) -> list:
     return [
-        image, model_name, generation_time, resolution,
-        f"<span class='status-pill {status_class}'>{escape(status)}</span>",
+        gr.update(value=image, visible=not loading),
+        gr.update(visible=loading),
+        model_name, generation_time, resolution, _status(status, status_class),
         peak_vram, gr.update(value=download_path, interactive=download_path is not None),
     ]
+
+
+def _skip_card(status: str | None = None) -> list:
+    updates = [gr.skip() for _ in range(8)]
+    if status is not None:
+        updates[5] = _status(status)
+    return updates
 
 
 def _active_status(flux_selected: bool, zimage_selected: bool) -> str:
@@ -95,8 +116,9 @@ def _active_status(flux_selected: bool, zimage_selected: bool) -> str:
         return "Active: None selected"
     return "  •  ".join(
         f"Active: {name} • "
-        + ("Endpoint not configured" if name == "Z-Image Turbo" and not os.environ.get("ZIMAGE_ENDPOINT")
-           else "Ready to generate")
+        + ("Token not configured" if not os.environ.get(
+            "FLUX_TOKEN" if name == "FLUX" else "ZIMAGE_TOKEN"
+        ) else "Ready to generate")
         for name in names
     )
 
@@ -107,66 +129,97 @@ def _save_for_download(image, model_name: str) -> str:
     return str(path)
 
 
+def _finished_values(model_name: str, result) -> tuple[list, str]:
+    if result.success and result.image is not None:
+        try:
+            download_path = _save_for_download(result.image, model_name)
+        except OSError:
+            download_path = None
+        width, height = result.image.size
+        peak_vram = f"{result.peak_vram:.0f} MB" if result.peak_vram is not None else "—"
+        card = _card_values(
+            model_name, image=result.image,
+            generation_time=f"{result.generation_time:.2f} s",
+            resolution=f"{width} × {height}",
+            status="Success", status_class="success",
+            peak_vram=peak_vram, download_path=download_path,
+        )
+        message = f"{model_name} image generated successfully."
+        if download_path is None:
+            message += " Download is temporarily unavailable."
+        return card, message
+
+    error = result.error if result is not None else "Backend unavailable."
+    return (
+        _card_values(
+            model_name, status=f"Generation failed: {error or 'Backend unavailable.'}",
+            status_class="failure",
+        ),
+        f"Generation failed for {model_name}. See its card for details.",
+    )
+
+
 def _generate_selected(
     prompt: str, flux_selected: bool, zimage_selected: bool, aspect_ratio: str,
 ) -> Iterator[list]:
-    """Stream visible states while calling only selected model services."""
-    selected = {"FLUX": bool(flux_selected), "Z-Image Turbo": bool(zimage_selected)}
-    values = {
-        name: _card_values(name, status="Not selected" if not selected[name] else "Not generated")
-        for name in selected
+    """Stream card-local states and independent results for selected services."""
+    selected = {
+        name: service for name, enabled, service in (
+            ("FLUX", flux_selected, generate_flux),
+            ("Z-Image Turbo", zimage_selected, generate_zimage),
+        ) if enabled
     }
-    qwen = _card_values("Qwen Image", status="Not available in current deployment")
 
-    def output(message: str) -> list:
-        return [message, *values["FLUX"], *values["Z-Image Turbo"], *qwen]
+    def output(message: str, updates: dict[str, list]) -> list:
+        return [message, *(value for name in MODELS for value in updates[name])]
 
+    skipped = {name: _skip_card() for name in MODELS}
     if not prompt or not prompt.strip():
-        yield output("Enter a prompt to generate images.")
+        yield output("Enter a prompt to generate images.", skipped)
         return
-    if not any(selected.values()):
-        yield output("Select FLUX or Z-Image Turbo to generate an image.")
+    if not selected:
+        yield output("Select FLUX or Z-Image Turbo to generate an image.", skipped)
+        return
+    if aspect_ratio != "Square":
+        yield output(
+            "Only Square is validated for this deployment. Select Square to generate.",
+            {name: _skip_card("Aspect ratio not yet validated") if name in selected else _skip_card()
+             for name in MODELS},
+        )
         return
 
-    for model_name, service in (("FLUX", generate_flux), ("Z-Image Turbo", generate_zimage)):
-        if not selected[model_name]:
-            continue
-        values[model_name] = _card_values(model_name, status="Loading model...", status_class="pending")
-        yield output(f"Loading model... {model_name}")
-        values[model_name] = _card_values(model_name, status="Generating image...", status_class="pending")
-        yield output(f"Generating image... {model_name}")
+    loading = {
+        name: _card_values(name, status="Loading model...", status_class="pending", loading=True)
+        if name in selected else _skip_card("Not selected")
+        for name in MODELS
+    }
+    yield output("Loading selected model services...", loading)
 
-        size = ASPECT_SIZES[model_name][aspect_ratio]
-        result = service(prompt.strip(), size=size)
-        if result.success and result.image is not None:
+    with ThreadPoolExecutor(max_workers=len(selected)) as executor:
+        futures = {
+            executor.submit(service, prompt.strip(), size=ASPECT_SIZES[name][aspect_ratio]): name
+            for name, service in selected.items()
+        }
+        generating = {
+            name: _card_values(name, status="Generating...", status_class="pending", loading=True)
+            if name in selected else _skip_card()
+            for name in MODELS
+        }
+        yield output("Generating selected images...", generating)
+
+        for future in as_completed(futures):
+            name = futures[future]
             try:
-                download_path = _save_for_download(result.image, model_name)
-            except OSError:
-                download_path = None
-            width, height = result.image.size
-            peak_vram = f"{result.peak_vram:.0f} MB" if result.peak_vram is not None else "—"
-            values[model_name] = _card_values(
-                model_name, image=result.image,
-                generation_time=f"{result.generation_time:.2f} s",
-                resolution=f"{width} × {height}",
-                status="Success", status_class="success",
-                peak_vram=peak_vram, download_path=download_path,
-            )
-            message = f"{model_name} image generated successfully."
-            if download_path is None:
-                message += " Download is temporarily unavailable."
-        else:
-            values[model_name] = _card_values(
-                model_name, generation_time=f"{result.generation_time:.2f} s",
-                status=f"Generation failed: {result.error or 'Backend unavailable.'}",
-                status_class="failure",
-            )
-            message = f"Generation failed for {model_name}. See its card for details."
-        yield output(message)
+                result = future.result()
+            except Exception:
+                result = None
+            card, message = _finished_values(name, result)
+            updates = {model: card if model == name else _skip_card() for model in MODELS}
+            yield output(message, updates)
 
 
 def build_generation_section() -> None:
-    """Render the Generate tab, including a disabled Qwen control and card."""
+    """Render the two live result cards and an informational Qwen badge."""
     prompt = gr.Textbox(
         label="Marketing prompt",
         placeholder="Example: A premium product hero image for a sustainable skincare launch…",
@@ -176,24 +229,21 @@ def build_generation_section() -> None:
     with gr.Row(elem_classes=["model-controls"]):
         flux = gr.Checkbox(label="FLUX", value=True)
         zimage = gr.Checkbox(label="Z-Image Turbo", value=True)
-        gr.Checkbox(label="Qwen Image — Not Available in Current Deployment",
-                    value=False, interactive=False)
+    gr.HTML("<p class='qwen-note'>Qwen Image — Not Available in Current Deployment</p>")
     active = gr.Markdown(_active_status(True, True), elem_classes=["active-models"])
     flux.change(_active_status, inputs=[flux, zimage], outputs=active)
     zimage.change(_active_status, inputs=[flux, zimage], outputs=active)
     aspect_ratio = gr.Dropdown(
         choices=list(ASPECT_SIZES["FLUX"]), value="Square", label="Aspect ratio",
+        info="Only Square is enabled until the deployed backends pass live size checks.",
     )
     generate_button = gr.Button("Generate images", variant="primary", elem_classes=["generate-button"])
     status = gr.Markdown("<span class='status-note'>Choose a prompt and generate with the active models.</span>")
 
     with gr.Row(equal_height=True, elem_classes=["results-grid"]):
-        cards = [
-            _result_card("FLUX", "FLUX"),
-            _result_card("Z-Image Turbo", "Z-Image Turbo"),
-            _result_card("Qwen Image", "Qwen Image — Not Available in Current Deployment"),
-        ]
+        cards = [_result_card(name) for name in MODELS]
     outputs = [status, *(component for card in cards for component in card.outputs())]
     generate_button.click(
         _generate_selected, inputs=[prompt, flux, zimage, aspect_ratio], outputs=outputs,
+        show_progress="hidden",
     )
