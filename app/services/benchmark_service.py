@@ -3,7 +3,6 @@
 import csv
 import json
 from pathlib import Path
-import hashlib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -122,60 +121,32 @@ def _find_row(
     csv_path: Path,
     prompt_id: str,
     model_id: str,
-) -> dict | None:
-    """Find the final successful benchmark row for one model/prompt."""
+) -> tuple[dict | None, bool]:
+    """Select one official row, never an arbitrary retry or duplicate."""
+    if not csv_path.is_file():
+        return None, False
 
-    with csv_path.open(
-        newline="",
-        encoding="utf-8",
-    ) as source:
-
-        rows = csv.DictReader(source)
-
-        for row in rows:
-
-            if row.get("prompt_id") != prompt_id:
+    with csv_path.open(newline="", encoding="utf-8") as source:
+        candidates = []
+        for row in csv.DictReader(source):
+            if row.get("prompt_id") != prompt_id or row.get("model") != model_id:
                 continue
-
-            if row.get("model") != model_id:
+            if "run_type" in row and row["run_type"].lower() != "official":
                 continue
-
-            if row.get("success", "").lower() != "true":
-                continue
-
-            # Commercial benchmark contains the final-benchmark flag.
             final_flag = row.get("included_in_final_benchmark")
+            if final_flag is not None and final_flag.lower() != "true":
+                continue
+            candidates.append(row)
 
-            if final_flag is not None:
-                if final_flag.lower() != "true":
-                    continue
+    if len(candidates) != 1:
+        return None, len(candidates) > 1
+    return candidates[0], False
 
-            return row
-
-    return None
-
-def _blind_order(
-    prompt_id: str,
-    records: list[dict],
-) -> list[dict]:
-    """
-    Return a deterministic blind order for the five models.
-
-    The order changes between prompts but stays identical
-    every time the same prompt is loaded.
-    """
-
-    return sorted(
-        records,
-        key=lambda record: hashlib.sha256(
-            f"{prompt_id}|{record.get('model', '')}".encode("utf-8")
-        ).hexdigest(),
-    )
 
 def load_comparison(
     prompt_id: str,
 ) -> tuple[str, list[dict]]:
-    """Return prompt text and saved results for all five models."""
+    """Return prompt text and one saved official result per model."""
 
     with PROMPTS_PATH.open(encoding="utf-8") as source:
         prompt = next(
@@ -191,7 +162,7 @@ def load_comparison(
 
     for source in MODEL_SOURCES:
 
-        row = _find_row(
+        row, ambiguous = _find_row(
             source["csv"],
             prompt_id,
             source["model"],
@@ -201,11 +172,18 @@ def load_comparison(
             records.append(
                 {
                     "image": None,
+                    "image_path": None,
                     "model": source["name"],
-                    "generation_time": "—",
-                    "resolution": "—",
+                    "provider": None,
+                    "generation_time": None,
+                    "resolution": None,
                     "success": False,
-                    "cost": "—",
+                    "cost": None,
+                    "peak_vram": None,
+                    "status": (
+                        "Ambiguous official outputs" if ambiguous
+                        else "Saved output unavailable"
+                    ),
                 }
             )
             continue
@@ -218,28 +196,28 @@ def load_comparison(
         width = row.get("width")
         height = row.get("height")
 
+        saved_success = row.get("success", "").lower() == "true"
         records.append(
             {
                 "image": image_path,
+                "image_path": image_path,
                 "model": source["name"],
-                "generation_time": (
-                    row.get("generation_time_seconds") or "—"
+                "provider": row.get("provider") or None,
+                "generation_time": row.get("generation_time_seconds") or None,
+                "resolution": f"{width} × {height}" if width and height else None,
+                "success": saved_success and bool(image_path),
+                "cost": row.get("estimated_cost_usd") or None,
+                "peak_vram": (
+                    row.get("peak_vram_mib_observed")
+                    or row.get("peak_vram_mib")
+                    or None
                 ),
-                "resolution": (
-                    f"{width} × {height}"
-                    if width and height
-                    else "—"
-                ),
-                "success": bool(image_path),
-                "cost": (
-                    row.get("estimated_cost_usd") or "—"
+                "status": (
+                    "Success" if saved_success and image_path
+                    else "Saved image unavailable" if saved_success
+                    else "Failed"
                 ),
             }
         )
-
-    records = _blind_order(
-        prompt_id,
-        records,
-    )
 
     return prompt, records

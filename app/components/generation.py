@@ -318,7 +318,7 @@ def build_generation_section() -> None:
     )
     gr.HTML("<p class='control-label'>Models to compare</p>")
     with gr.Row(elem_classes=["model-controls"]):
-        flux = gr.Checkbox(label="FLUX", value=True)
+        flux = gr.Checkbox(label="FLUX.2 Klein", value=True)
         zimage = gr.Checkbox(label="Z-Image Turbo", value=True)
     gr.HTML("<p class='qwen-note'>Qwen Image — Not Available in Current Deployment</p>")
     active = gr.Markdown(_active_status(True, True), elem_classes=["active-models"])
@@ -347,7 +347,7 @@ def build_generation_section() -> None:
                 button.disabled = true;
                 button.textContent = "Generating...";
             }
-            if (prompt?.trim() && aspect === "Square" && (flux || zimage)) {
+            if (prompt?.trim() && aspect && (flux || zimage)) {
                 for (const [id, selected] of [
                     ["flux-result-card", flux], ["zimage-result-card", zimage]
                 ]) {

@@ -167,3 +167,27 @@ body, .gradio-container {
 @media (prefers-reduced-motion: reduce) {
   .image-loading-spinner { animation: none; }
 }
+
+/* Saved-result gallery keeps technical metrics compact on small screens. */
+.benchmark-metrics { margin: 10px 0 0; font-size: .8rem; }
+.benchmark-metrics > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+}
+.benchmark-metrics dt { color: var(--muted); flex: 0 0 auto; }
+.benchmark-metrics dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.evaluation-grid { flex-wrap: wrap !important; }
+.evaluation-grid .evaluation-card { flex: 1 1 320px !important; }
+.evaluation-card img, .benchmark-card img { object-fit: contain !important; max-width: 100%; }
+.evaluation-actions { flex-wrap: wrap !important; }
+.evaluation-actions button { min-height: 44px; }
+@media (max-width: 700px) {
+  .benchmark-grid .benchmark-card, .evaluation-grid .evaluation-card {
+    flex-basis: 100% !important;
+    width: 100% !important;
+  }
+  .evaluation-actions button { flex: 1 1 150px; }
+}

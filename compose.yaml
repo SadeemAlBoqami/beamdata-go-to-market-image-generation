@@ -83,6 +83,11 @@ services:
         read_only: true
         bind:
           create_host_path: false
+      - type: bind
+        source: ./evaluation/data
+        target: /srv/evaluation/data
+        bind:
+          create_host_path: false
     tmpfs:
       - /tmp:size=536870912
     ports:

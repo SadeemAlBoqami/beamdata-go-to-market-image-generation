@@ -10,9 +10,11 @@ CSS_PATH = APP_DIR / "assets" / "custom.css"
 try:  # Supports both `python -m app.app` and `python app/app.py`.
     from .components.benchmark import build_benchmark_section
     from .components.generation import build_generation_section
+    from .components.human_evaluation import build_human_evaluation_section
 except ImportError:  # pragma: no cover - convenience for direct execution
     from components.benchmark import build_benchmark_section
     from components.generation import build_generation_section
+    from components.human_evaluation import build_human_evaluation_section
 
 
 def _load_css() -> str:
@@ -44,6 +46,12 @@ def build_dashboard() -> gr.Blocks:
                             "Review existing final-model benchmark images and metadata. "
                             "No benchmark is run on this page.</p>")
                     build_benchmark_section(dashboard)
+
+            with gr.Tab("Human Evaluation"):
+                with gr.Group(elem_classes=["dashboard-section"]):
+                    gr.HTML("<h2>Human evaluation</h2><p class='section-copy'>"
+                            "Compare two saved images at a time and record your preference.</p>")
+                    build_human_evaluation_section(dashboard)
 
     return dashboard
 
