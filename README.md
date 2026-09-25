@@ -36,14 +36,14 @@ The target deployment environment should be designed with **approximately 16 GB 
 | Commercial-model evaluation | ✅ Complete |
 | Evaluate initial open-source candidates | ✅ Complete |
 | Investigate additional practical candidates where useful | ✅ Complete |
-| Select at least 2 open-source models for final deployment | 🔄 Final validation in progress |
-| Deploy final models through vLLM / vLLM-Omni | 🔄 In progress |
-| Run final 512×512 benchmark: 25 prompts per selected model | 🔄 In progress |
+| Select at least 2 open-source models for final deployment | ✅ Complete |
+| Deploy final models through vLLM / vLLM-Omni | ✅ Complete |
+| Run final 512×512 benchmark: 25 prompts per selected model | ✅ Complete |
 | Record latency, peak VRAM, failures, image references, etc. | ✅ Implemented |
-| Containerized inference services | 🔄 Final deployment pending |
-| HTTP API for each selected model | 🔄 Prototype serving validated; final deployment pending |
-| API key / Bearer authentication | ⏳ Pending |
-| Side-by-side human evaluation | ⏳ Pending |
+| Containerized inference services | ✅ Complete |
+| HTTP API for each selected model | ✅ Complete |
+| API key / Bearer authentication | ✅ Complete |
+| Side-by-side human evaluation | 🔄 In progress |
 | Final technical report and presentation | 🔄 In progress |
 
 ---
@@ -313,13 +313,13 @@ This allows the final model choice to be justified using measured evidence rathe
 ```text
 Commercial benchmark              ██████████ 100% ✅
 Commercial evaluation             ██████████ 100% ✅
-OSS feasibility testing            █████████░  90% 🔄
-Final candidate validation         █████████░  90% 🔄
-vLLM/Omni serving validation       ██████████ 100% ✅
-Final 512 benchmarks               █████████░  90% 🔄
-Authenticated final API            ███░░░░░░░  30% 🔄
-Side-by-side human evaluation      ██░░░░░░░░  20% ⏳
-Final report & presentation        ████░░░░░░  40% 🔄
+OSS feasibility testing           ██████████ 100% ✅
+Final candidate validation        ██████████ 100% ✅
+vLLM/Omni serving validation      ██████████ 100% ✅
+Final 512 benchmarks              █████████░  90% 🔄
+Authenticated final API           ██████████ 100% ✅
+Side-by-side human evaluation     █████░░░░░  50% 🔄
+Final report & presentation       █████░░░░░  50% 🔄
 ```
 
 > Percentages are a progress communication aid, not formal project scoring.
