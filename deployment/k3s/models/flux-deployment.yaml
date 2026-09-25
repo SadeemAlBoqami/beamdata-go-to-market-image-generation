@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux2-klein
+  namespace: beamdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flux2-klein
+  template:
+    metadata:
+      labels:
+        app: flux2-klein
+    spec:
+      containers:
+        - name: flux2-klein
+          image: ghcr.io/sadeemalboqami/flux2-klein:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8000
+              name: http
+
+          env:
+            - name: FLUX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: model-tokens
+                  key: flux-token
+
+          resources:
+            requests:
+              nvidia.com/gpu: 1
+            limits:
+              nvidia.com/gpu: 1
+
+          volumeMounts:
+            - name: flux-model
+              mountPath: /data/models/flux2-klein-gguf
+
+            - name: hf-cache
+              mountPath: /root/.cache/huggingface
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 12
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 5
+
+      volumes:
+        - name: flux-model
+          hostPath:
+            path: /data/models/flux2-klein-gguf
+            type: Directory
+
+        - name: hf-cache
+          hostPath:
+            path: /var/lib/hf-cache
+            type: DirectoryOrCreate
