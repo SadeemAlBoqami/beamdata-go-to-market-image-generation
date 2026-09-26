@@ -37,7 +37,7 @@ Logical Kubernetes resources after configuration:
 
 Create the NVIDIA time-slicing ConfigMap:
 
-kubectl apply -f deployment/k8s/gpu-sharing/nvidia-time-slicing-configmap.yaml
+kubectl apply -f deployment/k3s/gpu-sharing/nvidia-time-slicing-configmap.yaml
 
 Patch the existing NVIDIA device plugin:
 
@@ -45,7 +45,7 @@ kubectl patch daemonset \
   -n kube-system \
   nvidia-device-plugin-daemonset \
   --type strategic \
-  --patch-file deployment/k8s/gpu-sharing/nvidia-device-plugin-patch.yaml
+  --patch-file deployment/k3s/gpu-sharing/nvidia-device-plugin-patch.yaml
 
 Wait for the plugin to restart:
 

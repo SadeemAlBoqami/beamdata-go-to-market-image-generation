@@ -1,6 +1,7 @@
 """Entry point for the Image Generation Model Evaluation dashboard."""
 
 from pathlib import Path
+import os
 
 import gradio as gr
 
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     build_dashboard().launch(
         server_name="0.0.0.0",
         server_port=7860,
-        root_path="/proxy/7860",
+        root_path=os.getenv("GRADIO_ROOT_PATH", "/proxy/7860"),
         theme=gr.themes.Base(primary_hue="indigo", neutral_hue="slate"),
         css=_load_css(),
     )

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flux2-klein
+  name: z-image-turbo
   namespace: beamdata
 spec:
   replicas: 1
@@ -14,18 +14,18 @@ spec:
 
   selector:
     matchLabels:
-      app: flux2-klein
+      app: z-image-turbo
   template:
     metadata:
       labels:
-        app: flux2-klein
+        app: z-image-turbo
     spec:
       imagePullSecrets:
         - name: ghcr-pull
 
       containers:
-        - name: flux2-klein
-          image: ghcr.io/sadeemalboqami/flux2-klein:latest
+        - name: z-image-turbo
+          image: ghcr.io/sadeemalboqami/z-image-turbo@sha256:df5666d0f63f113d927376f7aa90b98e75807903009c06bb38d2b8f7c7315615
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -37,10 +37,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: model-tokens
-                  key: flux-token
-
-            - name: GGUF_MODEL
-              value: /models/flux-2-klein-4b-Q4_K_M.gguf
+                  key: zimage-token
 
             - name: HF_HOME
               value: /var/lib/hf-cache
@@ -55,10 +52,6 @@ spec:
               nvidia.com/gpu: 1
 
           volumeMounts:
-            - name: flux-model
-              mountPath: /models
-              readOnly: true
-
             - name: hf-cache
               mountPath: /var/lib/hf-cache
 
@@ -97,11 +90,6 @@ spec:
             failureThreshold: 3
 
       volumes:
-        - name: flux-model
-          hostPath:
-            path: /data/models/flux2-klein-gguf
-            type: Directory
-
         - name: hf-cache
           hostPath:
             path: /var/lib/hf-cache

@@ -1,0 +1,30 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: gradio-strip-prefix
+  namespace: beamdata
+spec:
+  stripPrefix:
+    prefixes:
+      - /proxy/7860
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gradio
+  namespace: beamdata
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: beamdata-gradio-strip-prefix@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - http:
+        paths:
+          - path: /proxy/7860
+            pathType: Prefix
+            backend:
+              service:
+                name: gradio
+                port:
+                  number: 7860
