@@ -42,7 +42,7 @@ spec:
                   key: zimage-token
 
             - name: GRADIO_ROOT_PATH
-              value: "/proxy/80/proxy/7860"
+              value: "/proxy/80"
 
             - name: GRADIO_ANALYTICS_ENABLED
               value: "False"

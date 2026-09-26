@@ -15,13 +15,12 @@ metadata:
   namespace: beamdata
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: beamdata-gradio-strip-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
     - http:
         paths:
-          - path: /proxy/7860
+          - path: /
             pathType: Prefix
             backend:
               service:
