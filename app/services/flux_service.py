@@ -24,7 +24,7 @@ class FluxGenerationResult:
 
     image: Image.Image | None
     generation_time: float
-    peak_vram: None
+    peak_vram: float | None
     success: bool
     error: str | None
 
@@ -49,8 +49,14 @@ def generate_flux(prompt: str, size: str = "1024x1024") -> FluxGenerationResult:
                 raise requests.HTTPError("Authentication failed. Check FLUX_TOKEN.")
             raise requests.HTTPError(f"Backend returned HTTP {response.status_code}.")
 
-        encoded_image = response.json()["data"][0]["b64_json"]
+        body = response.json()
+
+        encoded_image = body["data"][0]["b64_json"]
         image = Image.open(BytesIO(base64.b64decode(encoded_image))).copy()
+
+        metrics = body.get("metrics") or {}
+        peak_vram = metrics.get("peak_memory_mb")
+        peak_vram = float(peak_vram) if peak_vram is not None else None
     except requests.Timeout:
         error_message = "The FLUX backend timed out. Please try again."
     except requests.ConnectionError:
@@ -60,5 +66,11 @@ def generate_flux(prompt: str, size: str = "1024x1024") -> FluxGenerationResult:
     except (KeyError, IndexError, TypeError, ValueError, OSError):
         error_message = "FLUX returned an invalid image response."
     else:
-        return FluxGenerationResult(image, time.perf_counter() - started_at, None, True, None)
+        return FluxGenerationResult(
+            image,
+            time.perf_counter() - started_at,
+            peak_vram,
+            True,
+            None
+        )
     return FluxGenerationResult(None, time.perf_counter() - started_at, None, False, error_message)
