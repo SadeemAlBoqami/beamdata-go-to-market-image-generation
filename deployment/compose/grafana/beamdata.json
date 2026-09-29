@@ -1,0 +1,72 @@
+{
+  "uid": "beamdata-host-gpu",
+  "title": "Beamdata host and GPU",
+  "tags": ["beamdata"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {"from": "now-1h", "to": "now"},
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "GPU utilization",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "DCGM_FI_DEV_GPU_UTIL{job=\"dcgm\"}", "legendFormat": "GPU {{gpu}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "GPU VRAM (MiB)",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "sum(DCGM_FI_DEV_FB_USED{job=\"dcgm\"})", "legendFormat": "Used", "refId": "A"},
+        {"expr": "sum(DCGM_FI_DEV_FB_FREE{job=\"dcgm\"})", "legendFormat": "Free", "refId": "B"},
+        {"expr": "vector(49140)", "legendFormat": "Installed capacity (host reference)", "refId": "C"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "none"}, "overrides": []}
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "GPU temperature",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "DCGM_FI_DEV_GPU_TEMP{job=\"dcgm\"}", "legendFormat": "GPU {{gpu}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "celsius"}, "overrides": []}
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "GPU power",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "DCGM_FI_DEV_POWER_USAGE{job=\"dcgm\"}", "legendFormat": "GPU {{gpu}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "watt"}, "overrides": []}
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Host CPU used",
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{job=\"node\",mode=\"idle\"}[5m])))", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Host RAM used",
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\"} / node_memory_MemTotal_bytes{job=\"node\"})", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "/data disk used",
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "100 * (1 - node_filesystem_avail_bytes{job=\"node\",mountpoint=\"/data\"} / node_filesystem_size_bytes{job=\"node\",mountpoint=\"/data\"})", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Metrics scrape health (1 = reachable)",
+      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 24},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "up{job=~\"prometheus|dcgm|node|flux|zimage\"}", "legendFormat": "{{job}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "none", "min": 0, "max": 1}, "overrides": []}
+    }
+  ]
+}

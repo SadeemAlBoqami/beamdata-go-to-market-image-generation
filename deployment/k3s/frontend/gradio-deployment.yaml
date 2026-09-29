@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gradio
+  namespace: beamdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gradio
+  template:
+    metadata:
+      labels:
+        app: gradio
+    spec:
+      containers:
+        - name: gradio
+          image: beamdata-model-lab-gradio:k3s
+          imagePullPolicy: Never
+
+          ports:
+            - name: http
+              containerPort: 7860
+
+          env:
+            - name: FLUX_ENDPOINT
+              value: http://flux2-klein:8000/v1/images/generations
+
+            - name: FLUX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: model-tokens
+                  key: flux-token
+
+            - name: ZIMAGE_ENDPOINT
+              value: http://z-image-turbo:8000/v1/images/generations
+
+            - name: ZIMAGE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: model-tokens
+                  key: zimage-token
+
+            - name: GRADIO_ROOT_PATH
+              value: "/proxy/80"
+
+            - name: GRADIO_ANALYTICS_ENABLED
+              value: "False"
+
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+
+          volumeMounts:
+            - name: benchmark
+              mountPath: /srv/benchmark
+              readOnly: true
+
+            - name: evaluation-data
+              mountPath: /srv/evaluation/data
+
+            - name: tmp
+              mountPath: /tmp
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 8
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+
+      volumes:
+        - name: benchmark
+          hostPath:
+            path: /home/ubuntu/aidc/beamdata-go-to-market-image-generation/benchmark
+            type: Directory
+
+        - name: evaluation-data
+          hostPath:
+            path: /home/ubuntu/aidc/beamdata-go-to-market-image-generation/evaluation/data
+            type: Directory
+
+        - name: tmp
+          emptyDir:
+            sizeLimit: 512Mi

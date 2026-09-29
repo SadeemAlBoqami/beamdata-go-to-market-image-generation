@@ -1,0 +1,147 @@
+name: beamdata-model-lab
+
+x-model-gpu: &model-gpu
+  driver: nvidia
+  count: 1
+  capabilities: [gpu]
+
+services:
+  flux:
+    container_name: flux2-klein
+    image: ghcr.io/sadeemalboqami/flux2-klein:latest
+    pull_policy: never
+    restart: unless-stopped
+    environment:
+      API_TOKEN: ${FLUX_TOKEN:?Set FLUX_TOKEN in .env}
+      HF_HOME: /var/lib/hf-cache
+      HF_HUB_OFFLINE: "1"
+      GGUF_MODEL: /models/flux-2-klein-4b-Q4_K_M.gguf
+    volumes:
+      - type: bind
+        source: /data/models/flux2-klein-gguf
+        target: /models
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/lib/hf-cache
+        target: /var/lib/hf-cache
+        bind:
+          create_host_path: false
+    deploy:
+      resources:
+        reservations:
+          devices: [*model-gpu]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/health', headers={'Authorization': 'Bearer ' + os.environ['API_TOKEN']}), timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10m
+
+  zimage:
+    container_name: z-image-turbo
+    image: ghcr.io/sadeemalboqami/z-image-turbo:latest
+    pull_policy: never
+    restart: unless-stopped
+    environment:
+      API_TOKEN: ${ZIMAGE_TOKEN:?Set ZIMAGE_TOKEN in .env}
+      HF_HOME: /var/lib/hf-cache
+      HF_HUB_OFFLINE: "1"
+    volumes:
+      - type: bind
+        source: /var/lib/hf-cache
+        target: /var/lib/hf-cache
+        bind:
+          create_host_path: false
+    deploy:
+      resources:
+        reservations:
+          devices: [*model-gpu]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/health', headers={'Authorization': 'Bearer ' + os.environ['API_TOKEN']}), timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10m
+
+  gradio:
+    build:
+      context: ./app
+    restart: unless-stopped
+    environment:
+      FLUX_ENDPOINT: http://flux:8000/v1/images/generations
+      FLUX_TOKEN: ${FLUX_TOKEN:?Set FLUX_TOKEN in .env}
+      ZIMAGE_ENDPOINT: http://zimage:8000/v1/images/generations
+      ZIMAGE_TOKEN: ${ZIMAGE_TOKEN:?Set ZIMAGE_TOKEN in .env}
+      GRADIO_ANALYTICS_ENABLED: "False"
+      PYTHONDONTWRITEBYTECODE: "1"
+    volumes:
+      - type: bind
+        source: ./benchmark
+        target: /srv/benchmark
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./evaluation/data
+        target: /srv/evaluation/data
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:size=536870912
+    ports:
+      - "127.0.0.1:7860:7860"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7860/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+
+  prometheus:
+    image: prom/prometheus:v3.14.0
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --storage.tsdb.retention.size=1GB
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./deployment/compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9090/-/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:13.2.1
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    ports:
+      - "${GRAFANA_BIND_IP:-127.0.0.1}:3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deployment/compose/grafana/datasources.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ./deployment/compose/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/beamdata.yml:ro
+      - ./deployment/compose/grafana/beamdata.json:/var/lib/grafana/dashboards/beamdata.json:ro
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  prometheus_data:
+  grafana_data:

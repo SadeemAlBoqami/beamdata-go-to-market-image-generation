@@ -1,0 +1,193 @@
+:root {
+  --ink: #172033;
+  --muted: #667085;
+  --line: #e5e7eb;
+  --panel: #ffffff;
+  --canvas: #f7f8fc;
+  --accent: #4f46e5;
+}
+
+body, .gradio-container {
+  background: var(--canvas) !important;
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+.gradio-container {
+  max-width: 1440px !important;
+  padding: 30px 32px 52px !important;
+}
+
+.hero {
+  margin: 0 0 24px;
+  padding: 30px 32px;
+  color: #f8fafc;
+  border-radius: 16px;
+  background: linear-gradient(118deg, #151d35 0%, #283a78 55%, #4f46e5 120%);
+  box-shadow: 0 16px 34px rgba(36, 48, 91, .16);
+}
+
+/* Header text */
+.hero,
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p,
+.hero span,
+.hero strong {
+  color: white !important;
+}
+
+.hero h1, .hero p { margin: 0; }
+.hero h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+.hero > p:last-child { max-width: 720px; margin-top: 10px; color: #dce4ff; line-height: 1.55; }
+.eyebrow { color: #b9c8ff; font-size: .72rem; font-weight: 700; letter-spacing: .13em; margin-bottom: 8px !important; }
+
+.dashboard-section {
+  margin-top: 20px;
+  padding: 24px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 14px !important;
+  background: var(--panel) !important;
+  box-shadow: 0 5px 16px rgba(16, 24, 40, .035);
+}
+
+.dashboard-section h2 { margin: 0; font-size: 1.25rem; letter-spacing: -.02em; }
+.section-copy { margin: 5px 0 20px; color: var(--muted); font-size: .92rem; }
+.generate-button { margin-top: 4px; }
+
+.results-grid, .evaluation-grid { gap: 16px !important; margin-top: 20px; }
+.result-card, .score-card {
+  min-width: 0 !important;
+  padding: 18px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: #fcfcfe;
+}
+.result-card h3, .score-card h3 { margin: 0 0 3px; font-size: 1.02rem; }
+.score-card > div > p { margin: 0 0 14px; color: var(--muted); font-size: .82rem; }
+.result-image { margin: 12px 0 4px; }
+.result-image img { object-fit: contain !important; }
+.metadata-row { gap: 10px !important; }
+.metadata-row label { font-size: .74rem !important; }
+
+.status-pill, .status-note, .validation-message, .success-message {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: .79rem;
+  font-weight: 600;
+}
+.status-pill { padding: 4px 9px; border-radius: 999px; }
+.neutral { color: #475467; background: #eef1f5; }
+.pending { color: #7c5200; background: #fff3d4; }
+.status-note { color: var(--muted); }
+.validation-message { color: #b42318; }
+.success-message { color: #067647; }
+
+@media (max-width: 700px) {
+  .gradio-container { padding: 16px !important; }
+  .hero, .dashboard-section { padding: 20px !important; }
+  .results-grid, .evaluation-grid { flex-direction: column !important; }
+}
+
+.control-label { margin: 10px 0 4px; font-size: .84rem; font-weight: 600; }
+.model-controls { gap: 10px !important; }
+.active-models { padding: 8px 12px; border-radius: 8px; background: #eef2ff; color: #3730a3; }
+.status-pill.success { color: #067647; background: #dff7e9; }
+.status-pill.failure { color: #b42318; background: #feeceb; }
+
+.results-grid { flex-wrap: wrap !important; }
+.results-grid .result-card { flex: 1 1 340px !important; }
+.result-card .instant-loading { display: none !important; }
+.result-card.client-generating .instant-loading { display: block !important; }
+.result-card.client-generating .result-image,
+.result-card.client-generating .server-loading { display: none !important; }
+.result-card.client-generating .generation-status .status-pill { display: none; }
+.result-card.client-generating .generation-status::after {
+  content: "Generating...";
+  display: inline-block;
+  margin-top: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #7c5200;
+  background: #fff3d4;
+  font-size: .79rem;
+  font-weight: 600;
+}
+.image-loading {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px 0 4px;
+  border: 2px solid #c7d2fe;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #f0f3ff, #f8f9fc);
+  color: #303b78;
+  text-align: center;
+}
+.image-loading strong { font-size: 1.04rem; }
+.image-loading-copy { color: var(--muted); font-size: .8rem; }
+.image-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #c7d2fe;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: image-loading-spin .9s linear infinite;
+}
+.image-error { border-color: #f4b4ae; background: #fff7f6; color: #b42318; }
+.image-error-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #feeceb;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+@keyframes image-loading-spin { to { transform: rotate(360deg); } }
+.qwen-note {
+  display: inline-block;
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: #475467;
+  font-size: .78rem;
+  font-weight: 600;
+}
+@media (max-width: 850px) {
+  .results-grid { flex-direction: column !important; }
+  .results-grid .result-card { width: 100% !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .image-loading-spinner { animation: none; }
+}
+
+/* Saved-result gallery keeps technical metrics compact on small screens. */
+.benchmark-metrics { margin: 10px 0 0; font-size: .8rem; }
+.benchmark-metrics > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+}
+.benchmark-metrics dt { color: var(--muted); flex: 0 0 auto; }
+.benchmark-metrics dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.evaluation-grid { flex-wrap: wrap !important; }
+.evaluation-grid .evaluation-card { flex: 1 1 320px !important; }
+.evaluation-card img, .benchmark-card img { object-fit: contain !important; max-width: 100%; }
+.evaluation-actions { flex-wrap: wrap !important; }
+.evaluation-actions button { min-height: 44px; }
+@media (max-width: 700px) {
+  .benchmark-grid .benchmark-card, .evaluation-grid .evaluation-card {
+    flex-basis: 100% !important;
+    width: 100% !important;
+  }
+  .evaluation-actions button { flex: 1 1 150px; }
+}

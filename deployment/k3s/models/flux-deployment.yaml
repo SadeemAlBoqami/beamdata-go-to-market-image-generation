@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux2-klein
+  namespace: beamdata
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  selector:
+    matchLabels:
+      app: flux2-klein
+  template:
+    metadata:
+      labels:
+        app: flux2-klein
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+
+      containers:
+        - name: flux2-klein
+          image: ghcr.io/sadeemalboqami/flux2-klein:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8000
+              name: http
+
+          env:
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: model-tokens
+                  key: flux-token
+
+            - name: GGUF_MODEL
+              value: /models/flux-2-klein-4b-Q4_K_M.gguf
+
+            - name: HF_HOME
+              value: /var/lib/hf-cache
+
+            - name: HF_HUB_OFFLINE
+              value: "1"
+
+          resources:
+            requests:
+              nvidia.com/gpu: 1
+            limits:
+              nvidia.com/gpu: 1
+
+          volumeMounts:
+            - name: flux-model
+              mountPath: /models
+              readOnly: true
+
+            - name: hf-cache
+              mountPath: /var/lib/hf-cache
+
+          readinessProbe:
+            exec:
+              command:
+                - python
+                - -c
+                - |
+                  import os, urllib.request
+                  req = urllib.request.Request(
+                      "http://127.0.0.1:8000/health",
+                      headers={"Authorization": "Bearer " + os.environ["API_TOKEN"]}
+                  )
+                  urllib.request.urlopen(req, timeout=5)
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 20
+
+          livenessProbe:
+            exec:
+              command:
+                - python
+                - -c
+                - |
+                  import os, urllib.request
+                  req = urllib.request.Request(
+                      "http://127.0.0.1:8000/health",
+                      headers={"Authorization": "Bearer " + os.environ["API_TOKEN"]}
+                  )
+                  urllib.request.urlopen(req, timeout=5)
+            initialDelaySeconds: 600
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+
+      volumes:
+        - name: flux-model
+          hostPath:
+            path: /data/models/flux2-klein-gguf
+            type: Directory
+
+        - name: hf-cache
+          hostPath:
+            path: /var/lib/hf-cache
+            type: Directory
