@@ -1,108 +1,90 @@
-# Beamdata Image Generation — k3s Deployment
+# ☸️ BeamData Image Generation — k3s Deployment
 
-This directory contains the **Plan B** Kubernetes deployment for the Beamdata Image Generation project.
+This directory contains the validated **k3s / Kubernetes deployment** for the BeamData Image Generation project.
 
-> **Plan A remains Docker Compose.**
->
-> The k3s manifests are a second deployment path used to validate more production-oriented infrastructure behavior: GPU-aware scheduling, service discovery, secrets, rollout control, ingress, monitoring, and network policy.
+The deployment runs the two final selected open-source image-generation models as independent inference services, connects them to a Gradio frontend, exposes the application through Traefik, and includes GPU sharing, monitoring, and network controls.
 
 ---
 
-## 1. Current Architecture
+## 🏗️ Final Architecture
 
 ```text
-AIDC private network
-        |
-        |  Node: aidc-t09 / 10.0.0.144
-        |
-   Traefik Ingress
-        |
-        +----------------------+
-        |                      |
-   Gradio Service         Monitoring
-        |               Prometheus + Grafana
-        |
-   Gradio Pod
-      /    \
-     /      \
-FLUX Service  Z-Image Service
-    |             |
-FLUX Pod       Z-Image Pod
-     \           /
-      \         /
-       RTX A6000 48 GB
-       NVIDIA time-slicing
+External User
+     |
+     v
+Traefik :80
+     |
+     v
+Gradio :7860
+   /       \
+  v         v
+FLUX       Z-Image
+:8000       :8000
+  \         /
+   \       /
+ NVIDIA RTX A6000
+      |
+ NVIDIA time-slicing
+  2 logical GPU slots
+
+Monitoring
+├── Prometheus :9090
+└── Grafana    :3000
 ```
 
-### Current workloads
+### Service ports
 
-Namespace `beamdata`:
+| Component              |     Port |
+| ---------------------- | -------: |
+| Traefik external entry |   **80** |
+| Gradio frontend        | **7860** |
+| FLUX API               | **8000** |
+| Z-Image API            | **8000** |
+| Grafana                | **3000** |
+| Prometheus             | **9090** |
+
+Both model APIs listen on port `8000` inside the cluster.
+
+---
+
+## ✅ Deployed Workloads
+
+Namespace:
+
+```text
+beamdata
+```
+
+contains:
 
 - `flux2-klein`
 - `z-image-turbo`
 - `gradio`
 
-Namespace `monitoring`:
+Namespace:
+
+```text
+monitoring
+```
+
+contains:
 
 - `prometheus`
 - `grafana`
 
 ---
 
-## 2. What k3s Adds Compared with Docker Compose
-
-Docker Compose is still a valid and simpler single-node baseline.
-
-k3s adds:
-
-- Kubernetes Deployments and desired-state reconciliation
-- Stable Services and internal DNS
-- Namespaces
-- Kubernetes Secrets references
-- GPU resource scheduling through the NVIDIA device plugin
-- GPU time-slicing configuration
-- Controlled rollout strategy for GPU workloads
-- Traefik Ingress
-- NetworkPolicy resources
-- Prometheus and Grafana as cluster workloads
-- A cleaner path to future multi-node or multi-replica deployment
-
-k3s does **not** automatically provide:
-
-- More GPU capacity
-- VRAM isolation
-- Lower inference latency
-- A public Internet IP
-- Useful autoscaling when no additional GPU capacity exists
-- High availability on a single-node cluster
-
----
-
-## 3. Hardware and Environment
-
-Current development node:
-
-- Node: `aidc-t09`
-- Private node IP: `10.0.0.144`
-- GPU: NVIDIA RTX A6000
-- VRAM: ~48 GB
-- k3s: single-node cluster
-- Traefik: enabled
-- NVIDIA device plugin: enabled
-- GPU time-slicing: configured with 2 logical GPU replicas
-
-Important:
-
-> NVIDIA time-slicing is **scheduler sharing**, not VRAM isolation.
-
-Both models can coexist on the GPU, but simultaneous generation must still be benchmarked for latency, throughput, failures, and peak VRAM.
-
----
-
-## 4. Directory Layout
+## 📁 Directory Layout
 
 ```text
 deployment/k3s/
+├── app/
+│   ├── app.py
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── assets/
+│   ├── components/
+│   └── services/
 ├── frontend/
 │   ├── gradio-deployment.yaml
 │   └── gradio-service.yaml
@@ -123,6 +105,7 @@ deployment/k3s/
 │   ├── grafana-dashboard-provider-configmap.yaml
 │   ├── grafana-datasource-configmap.yaml
 │   ├── grafana-deployment.yaml
+│   ├── grafana-ingress.yaml
 │   ├── grafana-service.yaml
 │   ├── namespace.yaml
 │   ├── prometheus-configmap.yaml
@@ -130,145 +113,197 @@ deployment/k3s/
 │   └── prometheus-service.yaml
 ├── network-policy/
 │   └── model-network-policy.yaml
-├── DEPLOYMENT-TROUBLESHOOTING-REPORT.md
+├── README.md
 └── verify.sh
 ```
 
 ---
 
-## 5. Required Kubernetes Secrets
+## 🧩 What k3s Adds
 
-The manifests reference Kubernetes Secrets but do not store secret values in Git.
+Compared with the simpler Docker Compose path, k3s provides:
 
-Expected secrets:
+- Kubernetes Deployments and desired-state reconciliation
+- internal service discovery and DNS
+- Namespaces
+- Kubernetes Secret references
+- GPU resource scheduling
+- NVIDIA GPU time-slicing
+- controlled rollout behavior
+- Traefik ingress
+- NetworkPolicy
+- Prometheus and Grafana as cluster workloads
+- a clearer path toward future multi-node deployment
 
-### `beamdata/model-tokens`
+k3s does **not** automatically provide:
+
+- more physical GPU capacity,
+- VRAM isolation,
+- lower inference latency,
+- public Internet access,
+- or high availability on a single-node cluster.
+
+---
+
+## 🔐 Required Secrets
+
+Secret values are never stored in Git.
+
+Expected Kubernetes Secrets include:
+
+### Model API tokens
+
+Namespace:
+
+```text
+beamdata
+```
+
+Secret:
+
+```text
+model-tokens
+```
 
 Keys:
 
-- `flux-token`
-- `zimage-token`
+```text
+flux-token
+zimage-token
+```
 
-### `beamdata/ghcr-pull`
+### Container registry pull secret
 
-Used as an `imagePullSecret` for private GHCR images.
+```text
+ghcr-pull
+```
 
-### `monitoring/grafana-admin`
+### Grafana credentials
+
+Namespace:
+
+```text
+monitoring
+```
+
+Secret:
+
+```text
+grafana-admin
+```
 
 Keys:
 
-- `admin-user`
-- `admin-password`
+```text
+admin-user
+admin-password
+```
 
-Verify secret names only:
+Verify names only:
 
 ```bash
 kubectl get secrets -n beamdata
 kubectl get secrets -n monitoring
 ```
 
-Do not commit token or password values.
-
 ---
 
-## 6. Recommended Deployment Order
+## 🚀 Recommended Deployment Order
 
-### Step 1 — Namespace
+### 1. Create namespaces
 
 ```bash
 kubectl apply -f deployment/k3s/models/namespace.yaml
 kubectl apply -f deployment/k3s/monitoring/namespace.yaml
 ```
 
-### Step 2 — GPU time-slicing
+### 2. Configure GPU time-slicing
 
 ```bash
 kubectl apply -f deployment/k3s/gpu-sharing/nvidia-time-slicing-configmap.yaml
 ```
 
-The file:
+The NVIDIA Device Plugin patch is a patch file, not a standalone Kubernetes resource.
+
+Follow:
 
 ```text
-deployment/k3s/gpu-sharing/nvidia-device-plugin-patch.yaml
+deployment/k3s/gpu-sharing/README.md
 ```
 
-is a **patch file**, not a standalone Kubernetes resource. Do not run:
+Verify logical GPU capacity after the plugin configuration is active:
 
 ```bash
-kubectl apply -f deployment/k3s/gpu-sharing/nvidia-device-plugin-patch.yaml
+kubectl get nodes
+kubectl describe node
 ```
 
-Use the patch command documented in `deployment/k3s/gpu-sharing/README.md`.
-
-Verify:
-
-```bash
-kubectl get node aidc-t09 \
-  -o jsonpath='{.status.capacity.nvidia\.com/gpu}{" capacity\n"}{.status.allocatable.nvidia\.com/gpu}{" allocatable\n"}'
-```
-
-Expected logical capacity after time-slicing:
+Expected schedulable GPU capacity:
 
 ```text
-2 capacity
-2 allocatable
+2 logical GPU slots
 ```
 
-### Step 3 — Model workloads
+> These are scheduler-level replicas of one physical GPU, not two isolated GPUs.
+
+### 3. Deploy model services
 
 ```bash
 kubectl apply -f deployment/k3s/models/flux-service.yaml
 kubectl apply -f deployment/k3s/models/flux-deployment.yaml
+
 kubectl apply -f deployment/k3s/models/zimage-service.yaml
 kubectl apply -f deployment/k3s/models/zimage-deployment.yaml
 ```
 
-### Step 4 — Gradio
+### 4. Build the k3s Gradio image
 
-The k3s Gradio image is kept separate from Docker Compose:
+The k3s deployment keeps its own application variant under:
 
 ```text
-beamdata-model-lab-gradio:k3s
+deployment/k3s/app/
 ```
 
-Build with the **app directory as the build context**:
+Build using that directory as the context:
 
 ```bash
-docker build \
-  -t beamdata-model-lab-gradio:k3s \
-  -f app/Dockerfile \
-  ./app
+docker build   -t beamdata-model-lab-gradio:k3s   -f deployment/k3s/app/Dockerfile   deployment/k3s/app
 ```
 
-Import into k3s/containerd:
+Import the image into k3s/containerd when required:
 
 ```bash
-docker save beamdata-model-lab-gradio:k3s | \
-sudo k3s ctr -n k8s.io images import -
+docker save beamdata-model-lab-gradio:k3s | sudo k3s ctr -n k8s.io images import -
 ```
 
-Apply:
+Deploy Gradio:
 
 ```bash
 kubectl apply -f deployment/k3s/frontend/gradio-service.yaml
 kubectl apply -f deployment/k3s/frontend/gradio-deployment.yaml
 ```
 
-### Step 5 — Monitoring
+### 5. Deploy monitoring
 
 ```bash
 kubectl apply -f deployment/k3s/monitoring/
 ```
 
-### Step 6 — Ingress
+### 6. Apply ingress
 
 ```bash
 kubectl apply -f deployment/k3s/ingress/gradio-ingress.yaml
 ```
 
-### Step 7 — NetworkPolicy
+Traefik provides the external entry point on port:
 
-Apply network policy **after** core connectivity has been verified:
+```text
+80
+```
+
+### 7. Apply NetworkPolicy
+
+Apply only after required connectivity has been verified:
 
 ```bash
 kubectl apply -f deployment/k3s/network-policy/model-network-policy.yaml
@@ -276,7 +311,58 @@ kubectl apply -f deployment/k3s/network-policy/model-network-policy.yaml
 
 ---
 
-## 7. GPU Rollout Strategy
+## 🎨 Gradio Routing
+
+The Gradio application itself listens on:
+
+```text
+7860
+```
+
+External access is routed through:
+
+```text
+Traefik :80
+```
+
+The AIDC environment may add an additional proxy prefix before traffic reaches Traefik.
+
+That environment-specific prefix is supplied through:
+
+```text
+GRADIO_ROOT_PATH
+```
+
+The README intentionally does not hard-code the proxy prefix because it is environment-specific.
+
+---
+
+## 🧠 GPU Time-Slicing
+
+The deployment uses the NVIDIA Device Plugin to expose:
+
+```text
+2 logical GPU slots
+```
+
+on one RTX A6000.
+
+This allows Kubernetes to schedule:
+
+- one FLUX Pod,
+- and one Z-Image Pod
+
+at the same time.
+
+Important:
+
+> NVIDIA time-slicing is scheduler sharing, not VRAM isolation.
+
+Both model workloads still share the physical GPU's VRAM and compute capacity.
+
+---
+
+## 🔄 GPU-Aware Rollout Strategy
 
 The model Deployments use:
 
@@ -290,81 +376,84 @@ strategy:
 
 Why:
 
-The cluster exposes only 2 logical GPU slots. The Kubernetes default rolling update may try to create a third GPU-consuming pod before terminating the old pod.
+The cluster exposes only two logical GPU slots. A default rolling update may try to create an additional GPU-consuming Pod before terminating the old one.
 
-That new pod can remain `Pending` because no GPU slot is available.
+That extra Pod can remain `Pending`.
 
-`maxSurge: 0` prevents that extra GPU pod from being scheduled.
+`maxSurge: 0` prevents this behavior.
 
 Trade-off:
 
-- safer rollout on constrained GPU capacity
-- brief service interruption during a model update is possible
+- safer rollout on constrained GPU capacity,
+- but a brief model-service interruption during updates is possible.
 
-For the current capstone, this trade-off is acceptable.
-
----
-
-## 8. Gradio Root Path
-
-The application supports an environment-specific root path:
-
-```python
-root_path=os.getenv("GRADIO_ROOT_PATH", "/proxy/7860")
-```
-
-Docker Compose can continue using the default behavior.
-
-The k3s Deployment can override the path with:
-
-```yaml
-- name: GRADIO_ROOT_PATH
-  value: "/proxy/80/proxy/7860"
-```
-
-This was required because the AIDC IDE adds an additional proxy prefix before traffic reaches Traefik.
+This trade-off is acceptable for the current capstone deployment.
 
 ---
 
-## 9. Ingress vs Public Internet Access
+## 🐳 Docker vs. k3s Image Stores
 
-The k3s Ingress is working, but the node does not have a public Internet IP.
+Docker and k3s/containerd maintain separate image stores.
 
-Current network evidence:
+A locally built Docker image is **not automatically available** to k3s.
+
+When a locally built image is required by k3s:
+
+```bash
+docker save <image-name> | sudo k3s ctr -n k8s.io images import -
+```
+
+This was required during deployment validation.
+
+---
+
+## 📈 Monitoring
+
+The cluster includes:
+
+### Prometheus
+
+Port:
 
 ```text
-Node IP:          10.0.0.144
-Traefik external: 10.0.0.144
-Ingress address:  10.0.0.144
+9090
 ```
 
-`10.0.0.144` is a private address.
+Used for metrics collection.
 
-Therefore:
+### Grafana
+
+Port:
 
 ```text
-Internet
-   |
-   |  platform public endpoint / tunnel required
-   v
-Traefik Ingress
-   |
-Gradio
+3000
 ```
 
-Ingress provides routing **inside the deployment architecture**. It does not create a public IP by itself.
+Used for monitoring dashboards.
 
-Public access requires one of:
+The validated deployment confirmed:
 
-- AIDC-managed public endpoint
-- public IP / NAT / load balancer provided by the infrastructure owner
-- a tunnel for temporary demos
-
-This is an infrastructure perimeter limitation, not a k3s deployment failure.
+- both workloads running,
+- Prometheus targets UP,
+- and Grafana available inside the monitoring stack.
 
 ---
 
-## 10. Verification
+## 🌐 Ingress and External Access
+
+Traefik provides the Kubernetes ingress layer and listens externally on:
+
+```text
+80
+```
+
+Ingress routing is part of the deployment architecture, but Kubernetes ingress alone does not guarantee a public Internet endpoint.
+
+Public reachability depends on the surrounding infrastructure and AIDC access configuration.
+
+---
+
+## ✅ Verification
 
 Run:
 
@@ -372,117 +461,62 @@ Run:
 bash deployment/k3s/verify.sh
 ```
 
-The script checks:
+The verification workflow checks:
 
-- cluster access
-- `beamdata` workloads
-- monitoring workloads
-- Services
-- Ingress
-- GPU logical capacity
-- current GPU processes / VRAM
-- model health from the Gradio pod
-- local Traefik route
-- NetworkPolicy resources
-- disk usage
-- YAML client-side validation
-
----
-
-## 11. Current Validated State
-
-Validated during deployment:
-
-- FLUX and Z-Image can coexist on one RTX A6000
-- FLUX health endpoint returns HTTP 200
-- Z-Image health endpoint returns HTTP 200
-- Gradio can reach both model Services
-- real FLUX generation succeeded through the Gradio service layer
-- real Z-Image generation succeeded through the Gradio service layer
-- Prometheus and Grafana are running
-- Prometheus targets were verified UP
-- Traefik Ingress returns HTTP 200 from the node
-- NetworkPolicy application did not break required allowed paths
-
-Observed development measurements:
-
-- FLUX resident VRAM: ~11.9 GiB
-- Z-Image resident VRAM: ~7.9 GiB
-- Combined resident VRAM: ~19.9 GiB
-- FLUX 1024×1024 generation: ~18.8 s
-- Z-Image 512×512 generation: ~25.9 s
-
-These measurements are infrastructure validation results, **not a replacement for the official 25-prompt benchmark**.
+- cluster access,
+- `beamdata` workloads,
+- monitoring workloads,
+- Services,
+- Ingress,
+- GPU capacity,
+- current GPU processes and VRAM,
+- model health from the Gradio Pod,
+- Traefik routing,
+- NetworkPolicy resources,
+- disk usage,
+- and Kubernetes manifest validation.
 
 ---
 
-## 12. Important Remaining Engineering Validation
+## ✅ Validated State
 
-### Concurrent GPU benchmark
+The final deployment validated:
 
-Current deployment proves coexistence, but not production behavior under simultaneous requests.
+- FLUX and Z-Image can coexist on one RTX A6000.
+- FLUX health endpoint returns HTTP 200.
+- Z-Image health endpoint returns HTTP 200.
+- Gradio can reach both model Services.
+- FLUX generation succeeds through the Gradio service layer.
+- Z-Image generation succeeds through the Gradio service layer.
+- Prometheus and Grafana are running.
+- Prometheus targets were verified UP.
+- Traefik routing works.
+- NetworkPolicy did not break required communication paths.
 
-Measure at least:
-
-1. FLUX alone
-2. Z-Image alone
-3. FLUX + Z-Image simultaneously
-
-Capture:
-
-- success/failure rate
-- P50 latency
-- P95 latency
-- throughput
-- peak VRAM
-- GPU utilization
-- queueing behavior
-
-This determines whether time-slicing is appropriate for the target workload.
-
-### Resource sizing
-
-CPU and RAM `requests` / `limits` should be added after observing actual resource usage.
-
-Do not guess the values.
-
-### NetworkPolicy negative test
-
-The allowed paths have been verified.
-
-A future security validation should also create a temporary unauthorized pod and confirm that model access is denied.
+Observed infrastructure validation measurements are separate from the official 25-prompt benchmark and should not replace the benchmark results.
 
 ---
 
-## 13. Components Not Added Intentionally
+## ⚠️ Operational Notes
 
-The following are not currently justified by the workload and hardware:
-
-- HPA
-- GPU autoscaling
-- Helm
-- Argo CD
-- service mesh
-- multi-node control plane
-- scale-to-zero
-
-They should only be added if requirements, workload, reliability targets, or available GPU capacity justify them.
-
----
-
-## 14. Operational Safety Notes
-
-- Do not delete `/data/hf-cache`.
-- Do not manually remove k3s/containerd storage directories.
-- Check `/data` usage before large image pulls/imports.
+- Do not delete active model caches.
+- Check disk usage before large model pulls or image imports.
 - Docker and k3s/containerd use separate image stores.
-- A Docker image is not automatically visible to k3s.
-- Keep the Docker Compose deployment as Plan A.
-- Keep the k3s-specific Gradio image tagged separately as `:k3s`.
-- Never commit PATs, API tokens, or passwords.
+- Do not manually delete k3s/containerd storage directories.
+- Never commit API tokens, PATs, or passwords.
+- Keep production-style resource requests and limits evidence-based rather than guessed.
 
-For incident history and lessons learned, see:
+---
 
-```text
-deployment/k3s/DEPLOYMENT-TROUBLESHOOTING-REPORT.md
-```
+## 🔭 Remaining Production-Readiness Work
+
+The capstone deployment is complete, but production hardening can continue with:
+
+- concurrent FLUX + Z-Image benchmark,
+- P50 / P95 latency measurement,
+- throughput testing,
+- queueing analysis,
+- CPU and RAM resource sizing,
+- negative NetworkPolicy testing,
+- broader observability,
+- and multi-node testing if future infrastructure supports it.
