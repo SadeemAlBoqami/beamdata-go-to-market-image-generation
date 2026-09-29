@@ -1,91 +1,80 @@
-C:\Users\salmr\beamdata-go-to-market-image-generation>type README.md
+# 🖼️ Image Generation Model Evaluation & Deployment
 
-# AIDC Capstone ظ¤ Image Generation Model Evaluation & Deployment
+<p align="center">
+  <strong>BeamData · AI Data Center Capstone · Team 6</strong><br>
+  Evaluation, deployment, and infrastructure benchmarking of commercial and open-source image-generation models.
+</p>
 
-**Use Case 6: Go-to-Market Content Generation**
-**Team Progress Snapshot ظ¤ 21 Sep 2026**
-
-> **Current status:** Commercial benchmarking and evaluation are complete. Open-source feasibility testing is substantially complete. We are now validating the strongest final candidates through vLLM/vLLM-Omni and preparing the final deployment, authenticated API, side-by-side evaluation, and report.
+<p align="center">
+  <img alt="Project Status" src="https://img.shields.io/badge/status-core%20scope%20complete-brightgreen">
+  <img alt="Docker" src="https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white">
+  <img alt="Kubernetes" src="https://img.shields.io/badge/orchestration-k3s%20%2F%20Kubernetes-326CE5?logo=kubernetes&logoColor=white">
+  <img alt="vLLM Omni" src="https://img.shields.io/badge/serving-vLLM--Omni-6C63FF">
+  <img alt="GPU" src="https://img.shields.io/badge/GPU-NVIDIA%20RTX%20A6000-76B900?logo=nvidia&logoColor=white">
+</p>
 
 ---
 
-## 1. Project Goal
+## 🎯 Project Overview
 
-Evaluate whether open-source image-generation models can be a practical alternative or complement to the commercial image-generation models used by the platform.
+This project evaluates whether self-hosted open-source image-generation models can serve as practical alternatives or complements to commercial image-generation APIs used in marketing workflows.
 
-The final solution must balance:
+The project covers the full path from **benchmarking and human evaluation** to **containerized model serving, authenticated APIs, Kubernetes deployment, GPU sharing, monitoring, and a Gradio frontend**.
 
-- Image quality
-- Prompt adherence
-- Generation latency
-- Reliability
+### Core evaluation criteria
+
+- Image quality and prompt adherence
+- Generation latency and reliability
 - GPU / VRAM usage
+- Cost where verifiable
 - vLLM / vLLM-Omni compatibility
-- Deployment complexity
-- Licensing suitability
-- API access and authentication
-
-The target deployment environment should be designed with **approximately 16 GB VRAM** in mind.
+- Docker and Kubernetes deployment
+- Authenticated HTTP inference
+- Human preference and ranking
 
 ---
 
-## 2. Official Project Requirements ظ¤ Progress
+## ✅ What Was Delivered
 
-| Requirement                                                 | Status                                                    |
-| ----------------------------------------------------------- | --------------------------------------------------------- |
-| Fixed benchmark of 25 prompts across 5 marketing categories | ظ£à Complete                                              |
-| Benchmark 3 commercial models using the same prompts        | ظ£à Complete                                              |
-| Commercial-model evaluation                                 | ظ£à Complete                                              |
-| Evaluate initial open-source candidates                     | ظ£à Complete                                              |
-| Investigate additional practical candidates where useful    | ظ£à Complete                                              |
-| Select at least 2 open-source models for final deployment   | ≡ا¤ Final validation in progress                          |
-| Deploy final models through vLLM / vLLM-Omni                | ≡ا¤ In progress                                           |
-| Run final 512├ù512 benchmark: 25 prompts per selected model | ≡ا¤ In progress                                           |
-| Record latency, peak VRAM, failures, image references, etc. | ظ£à Implemented                                           |
-| Containerized inference services                            | ≡ا¤ Final deployment pending                              |
-| HTTP API for each selected model                            | ≡ا¤ Prototype serving validated; final deployment pending |
-| API key / Bearer authentication                             | ظ│ Pending                                                |
-| Side-by-side human evaluation                               | ظ│ Pending                                                |
-| Final technical report and presentation                     | ≡ا¤ In progress                                           |
+| Area | Delivered |
+|---|---|
+| Commercial benchmark | 3 commercial models × 25 fixed prompts |
+| Open-source feasibility | Multiple candidate models investigated |
+| Final OSS models | FLUX.2 Klein 4B Q4_K_M + Z-Image-Turbo W4 |
+| OSS benchmark | 25 prompts/model at 512×512 |
+| Inference serving | vLLM / vLLM-Omni |
+| Containerization | Docker |
+| API | Authenticated HTTP image-generation endpoints |
+| Frontend | Gradio application |
+| Orchestration | k3s / Kubernetes |
+| GPU sharing | NVIDIA GPU time-slicing |
+| Monitoring | Prometheus + Grafana manifests |
+| Human evaluation | Commercial rubric + blind preference + five-model ranking |
+| Analysis | CSV/XLSX benchmark and evaluation outputs |
 
 ---
 
-## 3. Project Workflow
+## 🧭 End-to-End Workflow
 
 ```mermaid
 flowchart LR
     A[25 Fixed Marketing Prompts] --> B[Commercial Benchmark]
-    B --> C[Commercial Evaluation]
+    B --> C[Commercial Human Evaluation]
     C --> D[Open-Source Feasibility]
-    D --> E[Model Selection]
-    E --> F[vLLM / vLLM-Omni Deployment]
-    F --> G[Final 512 Benchmark]
-    G --> H[Side-by-Side Human Evaluation]
-    H --> I[Final Recommendation & Report]
+    D --> E[Final Model Selection]
+    E --> F[vLLM-Omni Serving]
+    F --> G[Docker Containers]
+    G --> H[k3s / Kubernetes]
+    H --> I[Gradio Frontend]
+    I --> J[Five-Model Human Ranking]
+    J --> K[Final Technical Comparison]
 ```
 
 ---
 
-# Phase 1 ظ¤ Commercial Benchmark
+## 🧪 Benchmark Design
 
-## Goal
-
-Establish a fixed baseline using the same 25 marketing prompts for the three commercial image-generation models.
-
-## Models
-
-- OpenAI GPT Image 2
-- Black Forest Labs FLUX 2 Pro
-- Google Gemini 3.1 Flash Image / Nano Banana 2
-
-## Benchmark Structure
-
-- **5 categories**
-- **5 prompts per category**
-- **25 prompts per model**
-- **75 commercial benchmark images total**
-
-### Categories
+A fixed set of **25 prompts across five marketing categories** was used to keep evaluation consistent:
 
 1. People & Lifestyle
 2. Text & Typography
@@ -93,320 +82,201 @@ Establish a fixed baseline using the same 25 marketing prompts for the three com
 4. Products & Physical Objects
 5. Complex Compositions
 
-### Status
+Commercial APIs were benchmarked at **1024×1024**.  
+The required final open-source benchmark was performed at **512×512**.
 
-**ظ£à COMPLETE**
-
-The same prompt set is now reused throughout open-source evaluation so that comparisons remain consistent.
-
----
-
-# Phase 2 ظ¤ Commercial Evaluation
-
-## Goal
-
-Create the quality baseline that open-source candidates will be compared against.
-
-### Status
-
-**ظ£à COMPLETE**
-
-Commercial outputs were generated and evaluated using the shared benchmark prompt set.
+> Latency values across commercial and open-source models should be interpreted within their respective benchmark resolutions.
 
 ---
 
-# Phase 3 ظ¤ Open-Source Model Feasibility
+## 📊 Key Results
 
-## Goal
+### Commercial baseline
 
-Determine which open-source models are practical candidates for final deployment.
+| Model | Avg. Generation Time | Success Rate | Cost / Image |
+|---|---:|---:|---:|
+| GPT Image 2 | 44.83 s | 100% | $0.0500 |
+| FLUX 2 Pro | 15.28 s | 100% | $0.0315 |
+| Gemini 3.1 Flash Image | 8.91 s | 100% | $0.0670 |
 
-The feasibility stage evaluates:
+### Final open-source models
 
-- Model loading
-- 512├ù512 generation
-- vLLM / vLLM-Omni compatibility
-- Latency
-- Peak VRAM
-- Reliability
-- Image quality / prompt adherence
-- Runtime requirements
-- Deployment complexity
+| Model | Avg. Generation Time | Peak VRAM | Success Rate |
+|---|---:|---:|---:|
+| FLUX.2 Klein 4B Q4_K_M | **6.705 s** | 11.67 GB | 25/25 |
+| Z-Image-Turbo W4 | **14.554 s** | 7.86 GB | 25/25 |
 
----
+Both selected models completed the required benchmark with **zero recorded failures**.
 
-## 4. Open-Source Models Tested
+> The open-source models were tested on an NVIDIA RTX A6000 with 48 GB VRAM. Each model individually remained below the project’s ~16 GB VRAM target in the recorded benchmark, but a physical 16 GB GPU was not tested directly.
 
-### 512├ù512 Results
+### Five-model human ranking
 
-| Model                           |     Result |       Avg Latency |           Peak VRAM | vLLM / Omni | Visual Outcome                                              | Current Decision                  |
-| ------------------------------- | ---------: | ----------------: | ------------------: | ----------- | ----------------------------------------------------------- | --------------------------------- |
-| **FLUX.2 Klein 4B**             |      25/25 |        **5.20 s** |       **34.08 GiB** | ظ£à         | Good, but more visible errors than Z in our outputs         | Candidate                         |
-| **Stable Diffusion 3.5 Medium** |      25/25 |        **1.24 s** |       **31.62 GiB** | ظ£à         | **Visually very poor in our tested outputs**                | **Excluded from final shortlist** |
-| **SDXL Base 1.0**               |      25/25 |        **4.44 s** |        **8.22 GiB** | ظ£à         | **Visually very poor / unacceptable in our tested outputs** | **Excluded from final shortlist** |
-| **Z-Image-Turbo**               |      25/25 |       **19.14 s** |       **21.11 GiB** | ظ£à         | Very good; fewer visual errors than FLUX in our review      | **Strong candidate**              |
-| **Qwen-Image-2.1 ظ¤ vLLM-Omni** |      25/25 |         **7.77s** |       **34,03 GiB** | ظ£à         | Full API benchmark completed successfully                   | **Strong candidate**              |
-| **OmniGen2**                    | Smoke test | ~6.08 s wall time | ~23.26 GiB observed | ظ£à         | Acceptable image; weak generated text                       | Feasibility only                  |
+Each model received **75 ranking evaluations**, with Rank 1 representing the most preferred output.
 
-> **Important:** VRAM figures should be compared together with the runtime configuration. Measurements from different serving paths are not automatically equivalent.
+| Model | Average Rank | Top-3 Count | Top-3 Rate |
+|---|---:|---:|---:|
+| GPT Image 2 | 2.51 | 54 | 72.0% |
+| Gemini 3.1 Flash Image | 2.69 | 52 | 69.3% |
+| FLUX 2 Pro | 2.91 | 47 | 62.7% |
+| Z-Image-Turbo W4 | 3.29 | 40 | 53.3% |
+| FLUX.2 Klein 4B Q4_K_M | 3.60 | 32 | 42.7% |
 
----
-
-## 5. 1024├ù1024 Follow-Up Tests
-
-1024├ù1024 is a useful follow-up test for quality and scaling behavior, but the minimum required open-source benchmark remains 512├ù512.
-
-| Model                               | Result | Avg Latency |     Peak VRAM | Status                     |
-| ----------------------------------- | -----: | ----------: | ------------: | -------------------------- |
-| **FLUX.2 Klein 4B**                 |  25/25 | **16.91 s** | **19.46 GiB** | ظ£à Complete               |
-| **Stable Diffusion 3.5 Medium**     |  25/25 |  **4.09 s** | **20.39 GiB** | ظ£à Complete               |
-| **Qwen-Image-2.1 ظ¤ Diffusers run** |  25/25 | **77.47 s** | **16.95 GiB** | ظ£à Complete               |
-| **Z-Image-Turbo**                   |     ظ¤ |          ظ¤ |            ظ¤ | ظ│ Planned if time permits |
+The ranking results are reported separately from the commercial 1–5 rubric evaluation.
 
 ---
 
-# 6. Key Engineering Finding ظ¤ Qwen-Image-2.1 on vLLM-Omni
+## 🏗️ Deployment Architecture
 
-Qwen-Image-2.1 initially failed to start through the existing vLLM-Omni image with:
+The final implementation includes:
 
-```text
-Model class QwenImage21Pipeline not found in diffusion model registry
+- **FLUX.2 Klein** and **Z-Image-Turbo** served through vLLM-Omni
+- Separate Dockerized model services
+- Bearer token / API-key authentication
+- Gradio frontend
+- k3s / Kubernetes manifests
+- NVIDIA GPU time-slicing
+- Ingress configuration
+- Network policy
+- Prometheus and Grafana deployment manifests
+
+```mermaid
+flowchart TD
+    U[User] --> I[Ingress]
+    I --> G[Gradio UI :7860]
+    G --> F[FLUX Service :8000]
+    G --> Z[Z-Image Service :8000]
+
+    F --> GPU[NVIDIA RTX A6000]
+    Z --> GPU
+
+    GPU --> TS[2 Logical GPU Slots<br/>via Time-Slicing]
+
+    P[Prometheus] --> F
+    P --> Z
+    P --> GR[Grafana]
 ```
 
-## Root Cause
-
-The existing vLLM-Omni build did not contain the `QwenImage21Pipeline` implementation required by Qwen-Image-2.1.
-
-## Resolution
-
-We:
-
-1. Checked the latest vLLM-Omni source.
-2. Located the Qwen-Image-2.1 implementation in the dedicated upstream PR branch.
-3. Verified that the branch registers `QwenImage21Pipeline`.
-4. Installed the compatible vLLM 0.29.0 CUDA build.
-5. Started Qwen-Image-2.1 through `vllm serve --omni`.
-6. Verified that the vLLM-Omni API server started successfully.
-7. Sent a real request to `/v1/images/generations` and received a generated image successfully.
-
-### Current vLLM-Omni Serving Status
-
-**ظ£à Qwen-Image-2.1 is now successfully serving through vLLM-Omni.**
-
-Observed during startup:
-
-- `QwenImage21Pipeline` detected successfully
-- Model loaded successfully
-- Pure diffusion API server initialized
-- `/v1/images/generations` available
-- Application startup completed
-- One 512├ù512 API smoke request completed in approximately **7 seconds end-to-end**
-- vLLM-Omni reported approximately **30.55 GiB GPU memory after model loading** in the current configuration
-
-### Why This Matters
-
-This removes the major technical blocker that previously prevented Qwen-Image-2.1 from being considered for the final vLLM/vLLM-Omni deployment requirement.
-
-The **full 25-prompt benchmark through the vLLM-Omni API is now complete (25/25 successful)**. The final supplied runs completed at ~7.8 seconds each, and the observed GPU memory reached **34,845 MiB (~34.03 GiB)** in the final prompt. A complete CSV summary will be used for the official average / median / min / max latency and full-run peak VRAM.
+> GPU time-slicing enables scheduler-level sharing of one physical GPU. It does **not** provide VRAM isolation; both workloads still share the same physical GPU memory and compute resources.
 
 ---
 
-# 7. Current Shortlist
+## 🛠️ Key Infrastructure Challenges Solved
 
-## Final Candidates Under Comparison
+### 1. Two GPU workloads on one physical GPU
+Kubernetes initially exposed the RTX A6000 as a single `nvidia.com/gpu` resource. NVIDIA Device Plugin time-slicing was configured to expose **two logical GPU slots**, allowing both model Deployments to remain scheduled independently.
 
-The current shortlist is now **three models only**:
+### 2. Kubernetes `DiskPressure`
+Docker images, containerd snapshots, model files, Hugging Face caches, and Python environments consumed significant shared storage. Unused environments were removed carefully while preserving active model assets and caches.
 
-1. **FLUX.2 Klein 4B**
-2. **Qwen-Image-2.1**
-3. **Z-Image-Turbo**
+### 3. Docker vs. k3s/containerd image stores
+Images available in Docker were not automatically visible to k3s. Required images were explicitly exported from Docker and imported into the k3s containerd image store.
 
-These three remain under final comparison using image quality, prompt adherence, latency, VRAM, reliability, vLLM/vLLM-Omni compatibility, and deployment complexity.
+### 4. Rolling updates with limited GPU capacity
+Default rolling updates could request an additional GPU-backed Pod while both logical GPU slots were already occupied. Model Deployments were configured with:
 
-### FLUX.2 Klein 4B
-
-**Why it remains a candidate:**
-
-- 25/25 successful 512 benchmark
-- vLLM/vLLM-Omni serving demonstrated
-- Fast generation compared with Z and Qwen
-- 5.20 s average latency in the recorded 512 run
-
-**Main trade-offs:**
-
-- 34.08 GiB peak VRAM in the recorded 512 run
-- More visible generation errors than Z in our visual review
-
-### Qwen-Image-2.1
-
-**Why it is a strong candidate:**
-
-- 25/25 successful 512 benchmark through Diffusers
-- **25/25 successful 512 benchmark through the actual vLLM-Omni HTTP API**
-- Strong image quality in our review
-- Qwen vLLM-Omni compatibility blocker has been solved
-- Real `/v1/images/generations` serving path validated
-- Final benchmark requests completed successfully, with the last runs around **7.8 s/image**
-
-**Current trade-offs / items to summarize:**
-
-- vLLM-Omni uses substantially more VRAM than the previous Diffusers benchmark
-- Final supplied run reached **34,845 MiB (~34.03 GiB)**
-- Full CSV summary is still needed for official average / median / min / max latency and full-run peak VRAM
-- Final license suitability still needs to be documented
-
-### Z-Image-Turbo
-
-**Why it remains a strong candidate:**
-
-- 25/25 successful benchmark
-- Very good visual quality in our review
-- Fewer visible generation errors than FLUX in our tested outputs
-- vLLM-Omni serving demonstrated
-- Reasonable deployment path
-
-**Main trade-offs:**
-
-- 21.11 GiB peak VRAM in the recorded 512 run
-- ~19.14 s average latency
-
----
-
-# 8. Models Not Selected for the Current Final Shortlist
-
-## Stable Diffusion 3.5 Medium
-
-The model was technically fast and reliable, but **the visual outputs were very poor in our evaluation**, so it is not being considered for the final shortlist despite strong latency numbers.
-
-**Engineering conclusion:** exclude it because image quality / prompt adherence is a core project requirement, not just latency.
-
-## SDXL Base 1.0
-
-The model was technically efficient in VRAM and latency, but **the visual outputs were also very poor / unacceptable in the tested configuration**, including weak prompt adherence. A diagnostic FP32 test did not solve the observed output problem.
-
-**Engineering conclusion:** exclude the tested SDXL configuration from the final shortlist.
-
-## OmniGen2
-
-Successfully loaded and generated an image, but only a smoke test was completed. Generated text quality was weaker, and the project already has three stronger candidates with more complete benchmark evidence.
-
----
-
-# 9. Benchmark Evidence Collected
-
-For benchmarked models we record, where applicable:
-
-- `run_id`
-- `prompt_id`
-- `prompt`
-- `category`
-- `model`
-- `width`
-- `height`
-- `generation_time_seconds`
-- `peak_vram`
-- `GPU`
-- `success`
-- `error`
-- `image_path`
-- `timestamp`
-- runtime settings such as seed / steps / guidance
-
-This allows the final model choice to be justified using measured evidence rather than assumptions.
-
----
-
-# 10. Current Project Status
-
-```text
-Commercial benchmark              ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûê 100% ظ£à
-Commercial evaluation             ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûê 100% ظ£à
-OSS feasibility testing            ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûّ  90% ≡ا¤
-Final candidate validation         ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûّ  90% ≡ا¤
-vLLM/Omni serving validation       ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûê 100% ظ£à
-Final 512 benchmarks               ظûêظûêظûêظûêظûêظûêظûêظûêظûêظûّ  90% ≡ا¤
-Authenticated final API            ظûêظûêظûêظûّظûّظûّظûّظûّظûّظûّ  30% ≡ا¤
-Side-by-side human evaluation      ظûêظûêظûّظûّظûّظûّظûّظûّظûّظûّ  20% ظ│
-Final report & presentation        ظûêظûêظûêظûêظûّظûّظûّظûّظûّظûّ  40% ≡ا¤
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
 ```
 
-> Percentages are a progress communication aid, not formal project scoring.
+This prevents Kubernetes from attempting to schedule an extra GPU-consuming Pod during rollout.
 
 ---
 
-# 11. What We Are Doing Right Now
+## 🗂️ Repository Structure
 
-### Current Task
+```text
+.
+├── .github/
+│   └── workflows/                 # Container build workflows
+├── app/                           # Main Gradio application source
+├── benchmark/
+│   ├── prompts/                   # Fixed 25-prompt benchmark
+│   ├── results/                   # Commercial + final OSS outputs
+│   ├── run_commercial_benchmark.py
+│   ├── run_open_source_benchmark.py
+│   └── run_z_image_turbo_w4_benchmark.py
+├── deployment/
+│   ├── compose/                   # Docker Compose + monitoring config
+│   ├── flux2-klein/               # FLUX container files
+│   ├── z-image-turbo/             # Z-Image container files
+│   └── k3s/
+│       ├── app/                   # k3s-specific Gradio application variant
+│       ├── frontend/              # Gradio Deployment / Service
+│       ├── gpu-sharing/           # NVIDIA time-slicing config
+│       ├── ingress/               # Ingress configuration
+│       ├── models/                # Model Deployments / Services
+│       ├── monitoring/            # Prometheus + Grafana
+│       └── network-policy/        # Kubernetes network policy
+├── evaluation/
+│   ├── app/                       # Blind preference interface
+│   ├── data/                      # Raw evaluation inputs
+│   ├── results/                   # Processed results and analysis
+│   └── scripts/                   # Evaluation / aggregation scripts
+├── scripts/                       # Supporting validation utilities
+├── compose.yaml
+├── .env.example
+└── README.md
+```
 
-Summarize the newly completed **Qwen-Image-2.1 vLLM-Omni 25/25 benchmark** and compare it directly with **FLUX.2 Klein 4B** and **Z-Image-Turbo**.
+### Why are there two Gradio app locations?
 
-### Goal
+- `app/` contains the **main application source**.
+- `deployment/k3s/app/` contains the **k3s deployment-specific variant**, including environment-specific behavior such as proxy routing, deployment dependencies, and validated 512×512 FLUX settings.
 
-Produce the final evidence table for the three remaining candidates using the same decision criteria: image quality, prompt adherence, latency, VRAM, reliability, and serving compatibility.
-
-### Latest Qwen Result
-
-- **25/25 prompts completed successfully through vLLM-Omni**
-- Last four prompts (`CC-02` ظْ `CC-05`) each completed in approximately **7.8 s**
-- Highest VRAM value visible in the supplied final rows: **34,845 MiB (~34.03 GiB)**
-- No failures were reported in the completed run
-- Full CSV summary is the next step for exact average / median / min / max and full-run peak VRAM
-
----
-
-# 12. Immediate Next Steps
-
-1. **Summarize the completed Qwen vLLM-Omni CSV**
-2. **Compare FLUX vs Qwen vs Z using the official selection criteria**
-3. **Perform visual side-by-side review of the three candidates**
-4. **Confirm the final two models**
-5. **Containerize / finalize Kubernetes inference services**
-6. **Add Bearer-token or API-key authentication**
-7. **Run the final side-by-side human evaluation**
-8. **Complete final benchmark comparison and recommendation**
-9. **Finish technical report and presentation**
-
-### Optional if time remains
-
-- Test Z-Image-Turbo at 1024├ù1024
-- Explore runtime / VRAM optimization for Qwen
-- LoRA experimentation only if core project requirements are already complete
-
----
-
-# 13. Quick Presentation Summary
-
-## What have we completed?
-
-- Built the fixed 25-prompt commercial benchmark
-- Completed the commercial-model benchmark and evaluation
-- Tested multiple open-source image models
-- Collected latency, VRAM, reliability, and image outputs
-- Excluded **SDXL Base** and **Stable Diffusion 3.5 Medium** because their tested visual outputs were very poor
-- Identified **FLUX.2 Klein, Qwen-Image-2.1, and Z-Image-Turbo** as the three current finalists
-- Diagnosed and solved the Qwen-Image-2.1 vLLM-Omni compatibility blocker
-- Successfully completed **25/25 Qwen images through the vLLM-Omni HTTP API**
-
-## Where are we now?
-
-**Final candidate validation and deployment benchmarking.**
-
-The Qwen-Image-2.1 25-prompt vLLM-Omni benchmark is **complete (25/25)**. We are now comparing **FLUX vs Qwen vs Z** and preparing the final two-model selection.
-
-## What is next?
-
-Summarize Qwen performance, compare **FLUX vs Qwen vs Z**, select the final two models, add authenticated production-style endpoints, complete side-by-side human evaluation, and finish the final report.
+Both are intentionally retained because they serve different deployment contexts.
 
 ---
 
-# 14. Current Technical Takeaway
+## 🚀 Where to Start
 
-The project has moved beyond simply proving that open-source models can generate images.
+| Goal | Start Here |
+|---|---|
+| Understand the frontend | [`app/README.md`](app/README.md) |
+| Review benchmark prompts | [`benchmark/prompts/README.md`](benchmark/prompts/README.md) |
+| Review evaluation workflow | [`evaluation/README.md`](evaluation/README.md) |
+| Review deployment | [`deployment/README.md`](deployment/README.md) |
+| Review k3s setup | [`deployment/k3s/README.md`](deployment/k3s/README.md) |
+| Review deployment validation | [`deployment/VALIDATION.md`](deployment/VALIDATION.md) |
 
-We are now comparing **deployable inference services** using measurable engineering criteria:
+---
 
-**quality + prompt adherence + latency + VRAM + reliability + serving compatibility + deployment complexity.**
+## ⚠️ Important Limitations
 
-The strongest current progress is the successful transition of **Qwen-Image-2.1 from standalone experimentation to a complete 25/25 vLLM-Omni API benchmark**. The final shortlist is now **FLUX.2 Klein + Qwen-Image-2.1 + Z-Image-Turbo**, while SDXL and SD3.5 have been excluded due to poor visual results in our testing.
+- Commercial models were benchmarked at 1024×1024 while the final OSS benchmark used 512×512.
+- Open-source cost per image was not calculated because a verified GPU hourly rate was unavailable.
+- Production-scale concurrency and sustained load were not fully evaluated.
+- The open-source models were validated on one NVIDIA RTX A6000 environment.
+- Human evaluation used a limited evaluator pool.
 
-C:\Users\salmr\beamdata-go-to-market-image-generation>
+---
+
+## 🔭 Next Steps
+
+- Production concurrency and sustained-load testing
+- Verified GPU cost measurement
+- 1024×1024 production-resolution testing for selected OSS models
+- Further vLLM / vLLM-Omni optimization
+- Expanded human evaluation
+- BeamData AI Hub integration
+- Stronger observability and operational automation
+
+---
+
+## 📌 Final Takeaway
+
+The project demonstrated that **self-hosted image generation is technically feasible** using the selected open-source models.
+
+**FLUX.2 Klein 4B Q4_K_M** provided lower generation latency, while **Z-Image-Turbo W4** used less VRAM. Both were successfully served through the project’s containerized and Kubernetes-based infrastructure with authenticated API access.
+
+The final implementation provides BeamData with a measurable basis for comparing **managed commercial APIs** against **self-hosted open-source inference** across quality, latency, reliability, infrastructure usage, and operational complexity.
+
+---
+
+<p align="center">
+  <strong>BeamData · AI Data Center Capstone · Team 6</strong>
+</p>
