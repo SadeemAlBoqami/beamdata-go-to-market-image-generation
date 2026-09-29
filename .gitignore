@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Runtime Human Evaluation votes (existing Phase 2 CSVs remain tracked).
+evaluation/data/pairwise_human_evaluation.csv

@@ -1,0 +1,5 @@
+model=black-forest-labs/FLUX.2-klein-4B
+runtime=vLLM-Omni
+quantization=GGUF Q4_K_M
+resolution=512x512
+run_id=2a0777a6-afc4-41f0-982d-6ca08e331953
